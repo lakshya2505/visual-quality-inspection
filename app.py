@@ -258,17 +258,18 @@ def analyze_image():
         return jsonify({"error": "Cannot decode image file. Upload a valid JPG or PNG."}), 400
 
     frame = resize_if_large(frame)
+    raw_frame = frame.copy()
 
     # 1. Image Preprocessing
     t_prep = time.perf_counter()
-    gray      = cv2.cvtColor(frame, cv2.COLOR_BGR2GRAY)
+    gray      = cv2.cvtColor(raw_frame, cv2.COLOR_BGR2GRAY)
     blurred   = cv2.GaussianBlur(gray, (5, 5), 0)
     equalized = cv2.equalizeHist(blurred)
     edges     = cv2.Canny(equalized, 50, 150)
     prep_ms   = round((time.perf_counter() - t_prep) * 1000)
 
     preprocessing = {
-        "original":  to_b64(frame),
+        "original":  to_b64(raw_frame),
         "grayscale": to_b64(gray),
         "equalized": to_b64(equalized),
         "edges":     to_b64(edges),
@@ -281,8 +282,8 @@ def analyze_image():
     yolo_ms  = round((time.perf_counter() - t_yolo) * 1000)
 
     # 3. 2D FFT Frequency Analysis (Full Frame Baseline)
-    full_freq = extract_frequency_features(frame)
-    full_fft_plot = generate_frequency_b64(frame, full_freq, "Full Component Inspection")
+    full_freq = extract_frequency_features(raw_frame)
+    full_fft_plot = generate_frequency_b64(raw_frame, full_freq, "Full Component Inspection")
 
     # 4. Real BLIP VLM Analysis + Localized Defect FFT Spectrum
     t_vlm    = time.perf_counter()
@@ -326,7 +327,7 @@ def analyze_image():
     vlm_ms = round((time.perf_counter() - t_vlm) * 1000)
 
     # 5. Pixel Anomaly Heatmap & 3D Surface Topography Heightmap
-    diff_norm, heatmap_img, blended_heatmap, heightmap_grid, ra_roughness = generate_anomaly_heatmap(frame)
+    diff_norm, heatmap_img, blended_heatmap, heightmap_grid, ra_roughness = generate_anomaly_heatmap(raw_frame)
 
     # Verdict
     if defects:
@@ -356,7 +357,7 @@ def analyze_image():
         "max_severity":     max_sev,
         "total_detections": len(defects),
         "annotated_image":  to_b64(annotated),
-        "raw_image":        to_b64(frame),
+        "raw_image":        to_b64(raw_frame),
         "anomaly_heatmap":  to_b64(heatmap_img),
         "blended_heatmap":  to_b64(blended_heatmap),
         "heightmap_grid":   heightmap_grid,

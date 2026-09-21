@@ -1430,155 +1430,6 @@
     }
   }
 
-  function renderResults(data) {
-    const imgEl = document.getElementById('annotated-img');
-    const vidEl = document.getElementById('annotated-video');
-
-    if (data.type === 'video') {
-      imgEl.classList.add('hidden');
-      vidEl.classList.remove('hidden');
-      vidEl.src = data.video_url;
-      vidEl.load();
-      vidEl.play().catch(e => console.log('Autoplay deferred:', e));
-
-      document.getElementById('img-stats-row').innerHTML = [
-        { val: data.total_detections, lbl: 'Defects Logged' },
-        { val: data.max_severity.toUpperCase(), lbl: 'Max Severity' },
-        { val: `${data.total_frames} frames`, lbl: 'Video Length' },
-        { val: `${data.timing.total_ms}ms`, lbl: 'Processing Time' },
-      ].map(s => `<div class="mini-stat"><div class="val">${s.val}</div><div class="lbl">${s.lbl}</div></div>`).join('');
-    } else {
-      vidEl.classList.add('hidden');
-      imgEl.classList.remove('hidden');
-      imgEl.src = data.annotated_image;
-
-      document.getElementById('img-stats-row').innerHTML = [
-        { val: data.total_detections, lbl: 'Defects Found' },
-        { val: data.max_severity.toUpperCase(), lbl: 'Max Severity' },
-        { val: `${data.image_info.width}×${data.image_info.height}`, lbl: 'Resolution' },
-        { val: `${data.timing.total_ms}ms`, lbl: 'Total Time' },
-      ].map(s => `<div class="mini-stat"><div class="val">${s.val}</div><div class="lbl">${s.lbl}</div></div>`).join('');
-
-      const prepGrid = document.getElementById('prep-grid');
-      prepGrid.innerHTML = [
-        { key: 'original',  label: 'Original Input',      code: 'cv2.imread()' },
-        { key: 'grayscale', label: 'Grayscale',            code: 'cv2.cvtColor(BGR→GRAY)' },
-        { key: 'equalized', label: 'Histogram Equalized',  code: 'cv2.equalizeHist()' },
-        { key: 'edges',     label: 'Canny Edge Detection', code: 'cv2.Canny(50, 150)' },
-      ].map(item => `
-        <div class="prep-item">
-          <img src="${data.preprocessing[item.key]}" alt="${item.label}">
-          <div class="prep-label"><strong>${item.label}</strong><code>${item.code}</code></div>
-        </div>
-      `).join('');
-    }
-
-    renderDefectCards(data);
-    renderVerdict(data);
-
-    document.getElementById('results-wrapper').classList.remove('hidden');
-    showTab('output', document.getElementById('tab-output-btn'));
-  }
-
-  function renderDefectCards(data) {
-    const defects = data.defects || [];
-    const container = document.getElementById('defect-cards-container');
-
-    if (!defects || defects.length === 0) {
-      const fullFreq = data.full_frequency;
-      container.innerHTML = `
-        <div style="background:rgba(0,232,122,0.05); border:1px solid rgba(0,232,122,0.25); border-radius:var(--radius-sm); padding:20px; margin-bottom:16px;">
-          <div style="display:flex; align-items:center; gap:10px; margin-bottom:8px;">
-            <span style="font-size:1.8rem;">✅</span>
-            <div>
-              <strong style="color:var(--green); font-size:1rem;">Surface Quality Verified — Pass Verdict</strong>
-              <div style="font-size:0.78rem; color:var(--text2);">Full spatial image frequency decomposition meets baseline tolerances.</div>
-            </div>
-          </div>
-          ${fullFreq && fullFreq.fft_plot ? `
-            <div style="margin-top:14px; border:1px solid var(--border); border-radius:var(--radius-sm); overflow:hidden; background:#000;">
-              <div style="padding:6px 12px; background:rgba(0,0,0,0.5); border-bottom:1px solid var(--border); font-size:0.72rem; color:var(--cyan); font-weight:600; display:flex; justify-content:space-between;">
-                <span>⚡ Full Frame 2D Fast Fourier Transform Diagnostic</span>
-                <span style="color:var(--text2);">Spatial → |F(u,v)| → E(r)</span>
-              </div>
-              <img src="${fullFreq.fft_plot}" style="width:100%; display:block; cursor:pointer;" onclick="openModal('${fullFreq.fft_plot}', 'Full Component Frequency Spectrum', '2D Fast Fourier Transform magnitude spectrum showing homogeneous surface baseline.')" alt="Full Frame Frequency Spectrum">
-            </div>
-            <div style="display:flex; flex-wrap:wrap; gap:14px; margin-top:10px; font-size:0.76rem; color:var(--text3);">
-              <div>High-Frequency Ratio: <strong style="color:var(--cyan);">${fullFreq.high_freq_ratio}</strong></div>
-              <div>Spectral Energy: <strong>${fullFreq.spectral_energy.toExponential(2)}</strong></div>
-              <div>LBP Texture Entropy: <strong style="color:var(--purple);">${fullFreq.lbp_entropy}</strong></div>
-              <div>Dominant Peak Radius: <strong>r=${fullFreq.dominant_freq_radius}px</strong></div>
-            </div>
-          ` : ''}
-        </div>`;
-      return;
-    }
-
-    container.innerHTML = defects.map((d, i) => {
-      const confLabel = d.confidence_label || 'High';
-      const uncScore = d.uncertainty_score !== undefined ? d.uncertainty_score : 0.15;
-      const isReview = d.flag_human_review;
-      const badgeStyle = confLabel.includes('High') 
-        ? 'background:rgba(34,197,94,0.18);color:#4ade80;border:1px solid rgba(34,197,94,0.4);'
-        : (confLabel.includes('Medium')
-            ? 'background:rgba(245,158,11,0.18);color:#fbbf24;border:1px solid rgba(245,158,11,0.4);'
-            : 'background:rgba(239,68,68,0.22);color:#f87171;border:1px solid rgba(239,68,68,0.5);');
-
-      return `
-      <div class="defect-card" style="border-left: 3px solid ${isReview ? '#ef4444' : '#00d4ff'}; margin-bottom:18px; padding:18px;">
-        <div class="defect-card-top" style="display:flex; align-items:center; gap:10px; flex-wrap:wrap; margin-bottom:10px;">
-          <span style="font-size:1.4rem;">🔍</span>
-          <div class="defect-class" style="font-size:1.05rem; font-weight:700;">${d.class.toUpperCase()} ${d.frame !== undefined ? `(Frame ${d.frame} · ${d.timestamp})` : ''}</div>
-          <span class="severity-badge sev-${d.severity}">${d.severity}</span>
-          <span style="font-size:0.72rem;padding:3px 8px;border-radius:12px;font-weight:600;${badgeStyle}">
-            ${confLabel} (U=${uncScore})
-          </span>
-          ${isReview ? '<span style="font-size:0.72rem;padding:3px 8px;border-radius:12px;background:#ef4444;color:#fff;font-weight:700;">⚠️ HUMAN REVIEW REQUIRED</span>' : ''}
-        </div>
-
-        <div class="defect-description" style="font-size:0.88rem; line-height:1.5; color:var(--text); margin-bottom:12px;">"${d.description}"</div>
-
-        ${d.fft_plot ? `
-          <div style="margin:12px 0; border:1px solid var(--border); border-radius:var(--radius-sm); overflow:hidden; background:#000;">
-            <div style="padding:6px 12px; background:rgba(0,0,0,0.5); border-bottom:1px solid var(--border); font-size:0.72rem; color:var(--cyan); font-weight:600; display:flex; justify-content:space-between;">
-              <span>⚡ 2D Fast Fourier Transform & Radial Profile Diagnostic</span>
-              <span style="color:var(--text2);">Spatial ROI → |F(u,v)| → E(r)</span>
-            </div>
-            <img src="${d.fft_plot}" style="width:100%; display:block; cursor:pointer;" onclick="openModal('${d.fft_plot}', '${d.class.toUpperCase()} Frequency Signature', '2D Fast Fourier Transform log magnitude spectrum with radial energy distribution E(r) and Local Binary Pattern texture entropy.')" alt="FFT Spectrum">
-          </div>
-        ` : ''}
-
-        <div style="display:flex;flex-wrap:wrap;gap:16px;font-size:0.78rem;color:var(--text2);margin-top:8px;padding-top:8px;border-top:1px solid rgba(255,255,255,0.06);">
-          <div>Remediation Action: <strong style="color:#fff;">${d.action.toUpperCase()}</strong></div>
-          <div>YOLO Confidence: <strong>${d.confidence}%</strong></div>
-          ${d.high_freq_ratio !== undefined ? `<div>2D FFT HF Ratio: <strong style="color:#38bdf8;">${d.high_freq_ratio}</strong></div>` : ''}
-          ${d.lbp_entropy !== undefined ? `<div>LBP Entropy: <strong style="color:#a78bfa;">${d.lbp_entropy}</strong></div>` : ''}
-          ${d.dominant_freq_radius !== undefined ? `<div>Peak Radius: <strong>r=${d.dominant_freq_radius}px</strong></div>` : ''}
-        </div>
-      </div>
-    `;
-    }).join('');
-  }
-
-  function renderVerdict(data) {
-    const wrapper = document.getElementById('verdict-wrapper');
-    const v = data.verdict;
-    const emojis = { PASS: '✅', REWORK: '⚙️', FAIL: '❌' };
-
-    wrapper.innerHTML = `
-      <div class="verdict-banner ${v}">
-        <div class="verdict-emoji">${emojis[v] || '🔎'}</div>
-        <div>
-          <div style="font-size:0.75rem;text-transform:uppercase;color:var(--text2);">Quality Verdict</div>
-          <div class="verdict-value">${v}</div>
-        </div>
-        <div style="margin-left:auto;text-align:right;">
-          <div style="font-size:1.2rem;font-weight:700;">${data.total_detections} Defects</div>
-          <div style="font-size:0.8rem;color:var(--text2);">Max Severity: ${data.max_severity.toUpperCase()}</div>
-        </div>
-      </div>`;
-  }
-
   // ── Three.js & Split Slider Global State ───────────────────────
   let currentInspectionData = null;
   let currentSliderMode = 'thermal';
@@ -1603,19 +1454,29 @@
       const pct = (x / rect.width) * 100;
 
       divider.style.left = pct + '%';
-      overlay.style.clipPath = `polygon(0 0, ${pct}% 0, ${pct}% 100%, 0 100%)`;
+      // Left side shows base (Raw Image), Right side shows overlay (Anomaly / YOLO layer)
+      overlay.style.clipPath = `polygon(${pct}% 0, 100% 0, 100% 100%, ${pct}% 100%)`;
     }
 
-    divider.addEventListener('mousedown', () => { isDragging = true; });
-    container.addEventListener('mousedown', e => { isDragging = true; moveSlider(e.clientX); });
-    window.addEventListener('mouseup', () => { isDragging = false; });
-    window.addEventListener('mousemove', e => { if (isDragging) moveSlider(e.clientX); });
+    const startDrag = e => {
+      isDragging = true;
+      moveSlider(e.clientX || (e.touches && e.touches[0].clientX));
+    };
+    const stopDrag = () => { isDragging = false; };
+    const doDrag = e => {
+      if (!isDragging) return;
+      moveSlider(e.clientX || (e.touches && e.touches[0].clientX));
+    };
 
-    // Touch support
-    divider.addEventListener('touchstart', () => { isDragging = true; }, { passive: true });
-    container.addEventListener('touchstart', e => { isDragging = true; moveSlider(e.touches[0].clientX); }, { passive: true });
-    window.addEventListener('touchend', () => { isDragging = false; });
-    window.addEventListener('touchmove', e => { if (isDragging) moveSlider(e.touches[0].clientX); }, { passive: true });
+    divider.addEventListener('mousedown', startDrag);
+    container.addEventListener('mousedown', startDrag);
+    window.addEventListener('mouseup', stopDrag);
+    window.addEventListener('mousemove', doDrag);
+
+    divider.addEventListener('touchstart', startDrag, { passive: true });
+    container.addEventListener('touchstart', startDrag, { passive: true });
+    window.addEventListener('touchend', stopDrag);
+    window.addEventListener('touchmove', doDrag, { passive: true });
   }
 
   function setSliderMode(mode, btn) {
@@ -1633,49 +1494,55 @@
       if (rightLbl) rightLbl.textContent = 'Thermal Anomaly';
     } else if (mode === 'annotated') {
       afterImg.src = currentInspectionData.annotated_image;
-      if (rightLbl) rightLbl.textContent = 'YOLO Annotations';
+      if (rightLbl) rightLbl.textContent = 'YOLO Boxes';
     } else if (mode === 'blended') {
-      afterImg.src = currentInspectionData.blended_heatmap || currentInspectionData.anomaly_heatmap;
+      afterImg.src = currentInspectionData.blended_heatmap || currentInspectionData.anomaly_heatmap || currentInspectionData.annotated_image;
       if (rightLbl) rightLbl.textContent = 'Alpha Blended';
     }
   }
 
   function initThreeScene() {
     const container = document.getElementById('three-viewport');
-    if (!container || threeRenderer) return;
+    if (!container) return;
+    if (threeRenderer) {
+      onWindowResizeThree();
+      return;
+    }
 
-    const width  = container.clientWidth || 600;
+    const width  = container.clientWidth || 700;
     const height = container.clientHeight || 480;
 
     threeScene = new THREE.Scene();
     threeCamera = new THREE.PerspectiveCamera(45, width / height, 0.1, 1000);
-    threeCamera.position.set(0, -12, 14);
+    threeCamera.position.set(0, -11, 13);
+    threeCamera.lookAt(0, 0, 0);
 
-    threeRenderer = new THREE.WebGLRenderer({ antialias: true, alpha: true });
+    threeRenderer = new THREE.WebGLRenderer({ antialias: true, alpha: true, powerPreference: 'high-performance' });
     threeRenderer.setSize(width, height);
     threeRenderer.setPixelRatio(Math.min(window.devicePixelRatio, 2));
+    threeRenderer.setClearColor(0x030812, 1);
+    container.innerHTML = '';
     container.appendChild(threeRenderer.domElement);
 
     if (typeof THREE.OrbitControls !== 'undefined') {
       threeControls = new THREE.OrbitControls(threeCamera, threeRenderer.domElement);
       threeControls.enableDamping = true;
-      threeControls.dampingFactor = 0.05;
-      threeControls.maxPolarAngle = Math.PI / 2 - 0.05; // Prevent flipping upside down
+      threeControls.dampingFactor = 0.08;
+      threeControls.maxPolarAngle = Math.PI / 2 - 0.02;
     }
 
-    // Lighting
-    const ambientLight = new THREE.AmbientLight(0xffffff, 0.65);
-    threeScene.add(ambientLight);
+    // Industrial Scene Lighting
+    const ambient = new THREE.AmbientLight(0xffffff, 0.85);
+    threeScene.add(ambient);
 
-    const dirLight1 = new THREE.DirectionalLight(0x00d4ff, 1.2);
-    dirLight1.position.set(10, 15, 20);
+    const dirLight1 = new THREE.DirectionalLight(0x00d4ff, 1.8);
+    dirLight1.position.set(10, 15, 25);
     threeScene.add(dirLight1);
 
-    const dirLight2 = new THREE.DirectionalLight(0xff4466, 0.5);
-    dirLight2.position.set(-10, -15, -10);
+    const dirLight2 = new THREE.DirectionalLight(0xff9533, 0.9);
+    dirLight2.position.set(-12, -10, 15);
     threeScene.add(dirLight2);
 
-    // Animation loop
     function animate() {
       requestAnimationFrame(animate);
       if (threeControls) threeControls.update();
@@ -1684,14 +1551,12 @@
       }
     }
     animate();
-
-    window.addEventListener('resize', onWindowResizeThree);
   }
 
   function onWindowResizeThree() {
     const container = document.getElementById('three-viewport');
     if (!container || !threeRenderer || !threeCamera) return;
-    const width  = container.clientWidth;
+    const width  = container.clientWidth || 700;
     const height = container.clientHeight || 480;
     if (width > 0 && height > 0) {
       threeCamera.aspect = width / height;
@@ -1701,13 +1566,16 @@
   }
 
   function updateThreeMesh(grid, theme = currentThreeTheme) {
-    if (!grid || !threeScene) return;
+    if (!grid) return;
     heightmapGridCache = grid;
+
+    if (!threeScene) initThreeScene();
+    if (!threeScene) return;
 
     if (threeMesh) {
       threeScene.remove(threeMesh);
       threeMesh.geometry.dispose();
-      threeMesh.material.dispose();
+      if (threeMaterial) threeMaterial.dispose();
       threeMesh = null;
     }
 
@@ -1717,17 +1585,13 @@
     const pos = geometry.attributes.position;
     const colors = [];
 
-    // Theme color palettes
     const getThemeColor = (val, z) => {
       if (theme === 'cyan') {
-        const c = new THREE.Color().setHSL(0.52 + z * 0.1, 0.9, 0.35 + z * 0.45);
-        return c;
+        return new THREE.Color().setHSL(0.53 + z * 0.08, 0.95, 0.35 + z * 0.45);
       } else if (theme === 'gold') {
-        const c = new THREE.Color().setHSL(0.11 + z * 0.05, 0.95, 0.25 + z * 0.55);
-        return c;
+        return new THREE.Color().setHSL(0.12 + z * 0.06, 0.95, 0.30 + z * 0.50);
       } else { // Thermal Jet
-        const c = new THREE.Color().setHSL((1.0 - Math.min(1.0, val * 1.2)) * 0.7, 1.0, 0.5);
-        return c;
+        return new THREE.Color().setHSL((1.0 - Math.min(1.0, val * 1.15)) * 0.7, 1.0, 0.5);
       }
     };
 
@@ -1750,8 +1614,9 @@
 
     threeMaterial = new THREE.MeshStandardMaterial({
       vertexColors: true,
-      roughness: 0.25,
-      metalness: 0.65,
+      roughness: 0.3,
+      metalness: 0.6,
+      flatShading: true,
       wireframe: isWireframe,
       side: THREE.DoubleSide
     });
@@ -1759,6 +1624,12 @@
     threeMesh = new THREE.Mesh(geometry, threeMaterial);
     threeMesh.rotation.x = -Math.PI / 3;
     threeScene.add(threeMesh);
+
+    // Update Ra Index in HUD
+    const raEl = document.getElementById('three-ra-val');
+    if (raEl && currentInspectionData && currentInspectionData.ra_roughness !== undefined) {
+      raEl.textContent = `${currentInspectionData.ra_roughness} µm`;
+    }
   }
 
   function updateElevationScale(val) {
@@ -1791,7 +1662,7 @@
 
   function resetThreeCamera() {
     if (!threeCamera || !threeControls) return;
-    threeCamera.position.set(0, -12, 14);
+    threeCamera.position.set(0, -11, 13);
     threeControls.target.set(0, 0, 0);
     threeControls.update();
   }
@@ -1805,37 +1676,85 @@
     });
 
     if (name === 'three3d') {
-      setTimeout(onWindowResizeThree, 50);
+      setTimeout(() => {
+        if (!threeScene) initThreeScene();
+        onWindowResizeThree();
+        if (heightmapGridCache) updateThreeMesh(heightmapGridCache, currentThreeTheme);
+      }, 60);
     }
   }
 
-  // Update renderResults to populate Slider and 3D Topography
-  const _origRenderResults = renderResults;
-  renderResults = function(data) {
+  function renderResults(data) {
     currentInspectionData = data;
-    _origRenderResults(data);
+    const imgEl = document.getElementById('annotated-img');
+    const vidEl = document.getElementById('annotated-video');
 
-    if (data.type !== 'video') {
-      // Setup Split Difference Slider
+    if (data.type === 'video') {
+      imgEl.classList.add('hidden');
+      vidEl.classList.remove('hidden');
+      vidEl.src = data.video_url;
+      vidEl.load();
+      vidEl.play().catch(e => console.log('Autoplay deferred:', e));
+
+      document.getElementById('img-stats-row').innerHTML = [
+        { val: data.total_detections, lbl: 'Defects Logged' },
+        { val: data.max_severity.toUpperCase(), lbl: 'Max Severity' },
+        { val: `${data.total_frames} frames`, lbl: 'Video Length' },
+        { val: `${data.timing.total_ms}ms`, lbl: 'Processing Time' },
+      ].map(s => `<div class="mini-stat"><div class="val">${s.val}</div><div class="lbl">${s.lbl}</div></div>`).join('');
+    } else {
+      vidEl.classList.add('hidden');
+      imgEl.classList.remove('hidden');
+      imgEl.src = data.annotated_image;
+
+      document.getElementById('img-stats-row').innerHTML = [
+        { val: data.total_detections, lbl: 'Defects Found' },
+        { val: data.max_severity.toUpperCase(), lbl: 'Max Severity' },
+        { val: `${data.image_info.width}×${data.image_info.height}`, lbl: 'Resolution' },
+        { val: `${data.timing.total_ms}ms`, lbl: 'Total Time' },
+      ].map(s => `<div class="mini-stat"><div class="val">${s.val}</div><div class="lbl">${s.lbl}</div></div>`).join('');
+
+      // Preprocessing 2x2 Grid
+      const prepGrid = document.getElementById('prep-grid');
+      if (prepGrid && data.preprocessing) {
+        prepGrid.innerHTML = [
+          { key: 'original',  label: 'Original Input',      code: 'cv2.imread()' },
+          { key: 'grayscale', label: 'Grayscale',            code: 'cv2.cvtColor(BGR→GRAY)' },
+          { key: 'equalized', label: 'Histogram Equalized',  code: 'cv2.equalizeHist()' },
+          { key: 'edges',     label: 'Canny Edge Detection', code: 'cv2.Canny(50, 150)' },
+        ].map(item => `
+          <div class="prep-item">
+            <img src="${data.preprocessing[item.key]}" alt="${item.label}">
+            <div class="prep-label"><strong>${item.label}</strong><code>${item.code}</code></div>
+          </div>
+        `).join('');
+      }
+
+      // Split Difference Slider Setup
       const beforeImg = document.getElementById('slider-before-img');
       const afterImg  = document.getElementById('slider-after-img');
       if (beforeImg && afterImg) {
         beforeImg.src = data.raw_image || data.annotated_image;
         afterImg.src  = data.anomaly_heatmap || data.annotated_image;
-        setSliderMode('thermal', document.querySelector('.slider-controls-bar .layer-btn'));
+        setSliderMode('thermal', document.getElementById('btn-mode-thermal'));
       }
 
-      // Setup Three.js 3D Topography
+      // Three.js 3D Topography Mesh Setup
       if (data.heightmap_grid) {
-        if (!threeScene) initThreeScene();
-        updateThreeMesh(data.heightmap_grid, currentThreeTheme);
+        heightmapGridCache = data.heightmap_grid;
         const raEl = document.getElementById('three-ra-val');
         if (raEl && data.ra_roughness !== undefined) {
           raEl.textContent = `${data.ra_roughness} µm`;
         }
       }
     }
-  };
+
+    renderDefectCards(data);
+    renderVerdict(data);
+
+    document.getElementById('results-wrapper').classList.remove('hidden');
+    showTab('output', document.getElementById('tab-output-btn'));
+  }
 
   // Initialize Split Slider on load
   document.addEventListener('DOMContentLoaded', () => {
