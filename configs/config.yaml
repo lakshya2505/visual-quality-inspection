@@ -1,0 +1,61 @@
+# ============================================================
+# Automated Visual Quality Inspection — Configuration
+# ============================================================
+
+project:
+  name: "Visual Quality Inspection"
+  version: "0.1.0"
+
+# ── YOLO Detection Settings ──────────────────────────────────
+detection:
+  model_path: "yolov8n.pt"          # yolov8n/s/m/l/x.pt or custom path
+  confidence_threshold: 0.25
+  iou_threshold: 0.45
+  device: "mps"                      # cpu | cuda | mps (use mps for M4 Mac)
+  crop_padding: 20                   # pixels of padding around each crop
+
+# ── VLM Analysis Settings ────────────────────────────────────
+vlm:
+  backend: "blip"                   # blip | mock | claude | gpt4v | llava
+  max_tokens: 512
+
+  # Claude-specific
+  claude_model: "claude-sonnet-4-6"
+
+  # GPT-4 Vision specific
+  gpt4v_model: "gpt-4o"
+
+  # LLaVA local
+  llava_model_id: "llava-hf/llava-1.5-7b-hf"
+  llava_load_in_4bit: true
+
+# ── Defect Classes ───────────────────────────────────────────
+defect_classes:
+  - scratch
+  - dent
+  - crack
+  - contamination
+  - corrosion
+  - other
+
+# ── Severity → Action Mapping ────────────────────────────────
+action_policy:
+  low: "pass"
+  medium: "inspect_further"
+  high: "rework"
+  critical: "scrap"
+
+# ── Pipeline Settings ────────────────────────────────────────
+pipeline:
+  output_dir: "outputs"
+  save_annotated_images: true
+  save_json_reports: true
+  batch_extensions: [".jpg", ".jpeg", ".png", ".bmp"]
+
+# ── Training Settings (future use) ───────────────────────────
+training:
+  dataset_yaml: "configs/dataset.yaml"
+  epochs: 100
+  batch_size: 16
+  image_size: 640
+  pretrained_weights: "yolov8n.pt"

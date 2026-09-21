@@ -1,0 +1,20 @@
+timestamp,frame,class,confidence,severity,action,bbox,vlm_description,spectral_energy,high_freq_ratio,dominant_freq_radius,lbp_entropy,uncertainty_score,confidence_label,flag_human_review
+00:13:34,40,frisbee,0.299,medium,inspect_further,"[15, 38, 866, 834]",a quality inspection photo showing a frisbee defect :er ' s bottle,6268162949120.0,0.004,1,4.8135,0.4185,Medium,False
+00:13:39,100,toilet,0.434,medium,inspect_further,"[29, 45, 873, 843]",a quality inspection photo showing a toilet defect :er,6330056310784.0,0.0029,1,4.959,0.4083,Medium,False
+00:13:41,100,frisbee,0.384,medium,inspect_further,"[43, 39, 883, 836]",a quality inspection photo showing a frisbee defect : bottle,6245597069312.0,0.0029,1,4.9715,0.4064,Medium,False
+00:13:46,140,toilet,0.252,medium,inspect_further,"[29, 37, 873, 837]",a quality inspection photo showing a toilet defect :er ' s bottle,6313939795968.0,0.0042,1,4.9928,0.5428,Medium,False
+00:13:49,180,defect,0.63,medium,inspect_further,"[193, 634, 276, 718]",a quality inspection photo showing a defect defect :,2575171747840.0,0.0048,1,5.3771,0.0625,High,False
+00:13:52,200,clock,0.256,medium,inspect_further,"[9, 34, 861, 843]",a quality inspection photo showing a clock defect :s in a bottle,6337455325184.0,0.0037,1,4.8375,0.49,Medium,False
+00:13:55,220,frisbee,0.418,medium,inspect_further,"[36, 41, 891, 844]",a quality inspection photo showing a frisbee defect :er ' s bottle,6454213918720.0,0.0036,1,4.9637,0.4171,Medium,False
+00:13:58,220,clock,0.26,medium,inspect_further,"[45, 38, 894, 833]",a quality inspection photo showing a clock defect :s are visible in the bottle,6228322172928.0,0.0037,1,4.9832,0.4659,Medium,False
+00:14:01,240,toilet,0.304,medium,inspect_further,"[31, 39, 875, 841]",a quality inspection photo showing a toilet defect : bottle,6242160623616.0,0.0031,1,5.0468,0.4819,Medium,False
+00:14:06,300,frisbee,0.263,medium,inspect_further,"[11, 42, 868, 810]",a quality inspection photo showing a frisbee defect : bottle with a black cap,5916922494976.0,0.0055,1,5.0211,0.4487,Medium,False
+00:14:09,320,frisbee,0.304,medium,inspect_further,"[42, 43, 895, 851]",a quality inspection photo showing a frisbee defect :er ' s bottle,6300823306240.0,0.0037,1,5.0645,0.479,Medium,False
+00:14:11,340,toilet,0.302,medium,inspect_further,"[39, 38, 870, 845]",a quality inspection photo showing a toilet defect :er ' s toilet leak,6335083675648.0,0.004,1,4.99,0.3876,Medium,False
+00:14:17,400,clock,0.272,medium,inspect_further,"[42, 36, 900, 845]",a quality inspection photo showing a clock defect : bottle,6366128029696.0,0.0039,1,4.8872,0.5777,Low ⚠️,True
+00:14:21,440,frisbee,0.28,medium,inspect_further,"[10, 35, 868, 835]",a quality inspection photo showing a frisbee defect :er ' s bottle,6204250849280.0,0.0036,1,4.8728,0.425,Medium,False
+00:14:24,460,frisbee,0.369,medium,inspect_further,"[41, 44, 896, 860]",a quality inspection photo showing a frisbee defect :er ' s bottle,6346182098944.0,0.0033,1,5.0532,0.4835,Medium,False
+00:14:28,480,clock,0.258,medium,inspect_further,"[12, 40, 860, 812]",a quality inspection photo showing a clock defect : bottle,5958126911488.0,0.0055,1,5.055,0.5124,Medium,False
+00:14:35,600,defect,0.62,medium,inspect_further,"[166, 616, 571, 781]",a quality inspection photo showing a defect defect : defect defect defect defect defect defect defect defect defect defect defect defect,1798639828992.0,0.0139,1,5.6724,0.1719,High,False
+00:14:39,620,clock,0.543,medium,inspect_further,"[43, 45, 865, 833]",a quality inspection photo showing a clock defect :er ' s lens,5880428838912.0,0.0041,1,5.3478,0.4747,Medium,False
+00:14:45,700,spoon,0.316,medium,inspect_further,"[612, 301, 785, 463]",a quality inspection photo showing a spoon defect :s are in the sink,2668703465472.0,0.0094,1,5.5576,0.5242,Medium,False

@@ -1,0 +1,3 @@
+YOLO Backbone,VLM Backend,Detections Found,Avg Confidence,YOLO Latency (ms),VLM Latency (ms),Total Latency (ms)
+YOLOv8n (Nano - 3.2M),BLIP (Real AI),26,0.448,177.1,810.9,988.0
+YOLOv8s (Small - 11.2M),BLIP (Real AI),21,0.51,32.9,228.6,261.5

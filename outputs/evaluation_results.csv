@@ -1,0 +1,428 @@
+dataset,filename,sub_category,ground_truth,predicted,correct,defect_count,max_severity,vlm_description
+transistor,000.png,bent_lead,DEFECT,DEFECT,True,1,medium,a quality inspection photo showing a cup defect :
+transistor,001.png,bent_lead,DEFECT,DEFECT,True,2,medium,a quality inspection photo showing a scissors defect :
+transistor,002.png,bent_lead,DEFECT,DEFECT,True,2,medium,a quality inspection photo showing a traffic light defect :
+transistor,003.png,bent_lead,DEFECT,DEFECT,True,1,medium,a quality inspection photo showing a traffic light defect :
+transistor,004.png,bent_lead,DEFECT,DEFECT,True,2,medium,a quality inspection photo showing a traffic light defect :
+transistor,005.png,bent_lead,DEFECT,PASS,False,0,N/A,
+transistor,006.png,bent_lead,DEFECT,DEFECT,True,3,medium,a quality inspection photo showing a person defect :s
+transistor,007.png,bent_lead,DEFECT,DEFECT,True,2,medium,a quality inspection photo showing a clock defect :
+transistor,008.png,bent_lead,DEFECT,DEFECT,True,1,medium,a quality inspection photo showing a scissors defect :s
+transistor,009.png,bent_lead,DEFECT,DEFECT,True,3,medium,a quality inspection photo showing a traffic light defect :
+transistor,000.png,cut_lead,DEFECT,DEFECT,True,1,medium,a quality inspection photo showing a clock defect :
+transistor,001.png,cut_lead,DEFECT,DEFECT,True,1,medium,a quality inspection photo showing a traffic light defect :
+transistor,002.png,cut_lead,DEFECT,DEFECT,True,3,medium,a quality inspection photo showing a skateboard defect :
+transistor,003.png,cut_lead,DEFECT,PASS,False,0,N/A,
+transistor,004.png,cut_lead,DEFECT,DEFECT,True,1,medium,a quality inspection photo showing a traffic light defect :
+transistor,005.png,cut_lead,DEFECT,DEFECT,True,1,medium,a quality inspection photo showing a traffic light defect :
+transistor,006.png,cut_lead,DEFECT,DEFECT,True,1,medium,a quality inspection photo showing a traffic light defect :
+transistor,007.png,cut_lead,DEFECT,DEFECT,True,1,medium,a quality inspection photo showing a traffic light defect :
+transistor,008.png,cut_lead,DEFECT,DEFECT,True,2,medium,a quality inspection photo showing a toothbrush defect :
+transistor,009.png,cut_lead,DEFECT,PASS,False,0,N/A,
+transistor,000.png,damaged_case,DEFECT,DEFECT,True,1,medium,a quality inspection photo showing a traffic light defect :
+transistor,001.png,damaged_case,DEFECT,PASS,False,0,N/A,
+transistor,002.png,damaged_case,DEFECT,DEFECT,True,1,medium,a quality inspection photo showing a toothbrush defect :
+transistor,003.png,damaged_case,DEFECT,DEFECT,True,1,medium,a quality inspection photo showing a person defect :
+transistor,004.png,damaged_case,DEFECT,PASS,False,0,N/A,
+transistor,005.png,damaged_case,DEFECT,DEFECT,True,2,medium,a quality inspection photo showing a person defect :
+transistor,006.png,damaged_case,DEFECT,DEFECT,True,1,medium,a quality inspection photo showing a traffic light defect :
+transistor,007.png,damaged_case,DEFECT,PASS,False,0,N/A,
+transistor,008.png,damaged_case,DEFECT,DEFECT,True,3,medium,a quality inspection photo showing a traffic light defect :e
+transistor,009.png,damaged_case,DEFECT,DEFECT,True,2,medium,a quality inspection photo showing a traffic light defect :e
+transistor,000.png,good,PASS,DEFECT,False,2,medium,a quality inspection photo showing a traffic light defect :
+transistor,001.png,good,PASS,DEFECT,False,1,medium,a quality inspection photo showing a traffic light defect :
+transistor,002.png,good,PASS,PASS,True,0,N/A,
+transistor,003.png,good,PASS,DEFECT,False,1,medium,a quality inspection photo showing a traffic light defect :
+transistor,004.png,good,PASS,DEFECT,False,2,medium,a quality inspection photo showing a toothbrush defect :
+transistor,005.png,good,PASS,PASS,True,0,N/A,
+transistor,006.png,good,PASS,DEFECT,False,2,medium,a quality inspection photo showing a traffic light defect :
+transistor,007.png,good,PASS,DEFECT,False,1,medium,a quality inspection photo showing a toothbrush defect :
+transistor,008.png,good,PASS,DEFECT,False,1,medium,a quality inspection photo showing a person defect :
+transistor,009.png,good,PASS,PASS,True,0,N/A,
+transistor,010.png,good,PASS,DEFECT,False,1,medium,a quality inspection photo showing a cup defect :
+transistor,011.png,good,PASS,DEFECT,False,2,medium,a quality inspection photo showing a person defect :
+transistor,012.png,good,PASS,DEFECT,False,3,medium,a quality inspection photo showing a person defect :
+transistor,013.png,good,PASS,DEFECT,False,1,medium,a quality inspection photo showing a traffic light defect :
+transistor,014.png,good,PASS,DEFECT,False,1,medium,a quality inspection photo showing a scissors defect :
+transistor,015.png,good,PASS,DEFECT,False,2,medium,a quality inspection photo showing a toothbrush defect :
+transistor,016.png,good,PASS,DEFECT,False,1,medium,a quality inspection photo showing a person defect :s
+transistor,017.png,good,PASS,DEFECT,False,2,medium,a quality inspection photo showing a toothbrush defect :
+transistor,018.png,good,PASS,PASS,True,0,N/A,
+transistor,019.png,good,PASS,DEFECT,False,3,medium,a quality inspection photo showing a toothbrush defect :
+transistor,020.png,good,PASS,DEFECT,False,2,medium,a quality inspection photo showing a clock defect :
+transistor,021.png,good,PASS,DEFECT,False,1,medium,a quality inspection photo showing a traffic light defect :
+transistor,022.png,good,PASS,DEFECT,False,3,medium,a quality inspection photo showing a person defect :
+transistor,023.png,good,PASS,PASS,True,0,N/A,
+transistor,024.png,good,PASS,PASS,True,0,N/A,
+transistor,025.png,good,PASS,DEFECT,False,1,medium,a quality inspection photo showing a traffic light defect :
+transistor,026.png,good,PASS,DEFECT,False,1,medium,a quality inspection photo showing a traffic light defect :
+transistor,027.png,good,PASS,DEFECT,False,2,medium,a quality inspection photo showing a toothbrush defect :
+transistor,028.png,good,PASS,DEFECT,False,3,medium,a quality inspection photo showing a person defect :
+transistor,029.png,good,PASS,DEFECT,False,2,medium,a quality inspection photo showing a person defect :s
+transistor,030.png,good,PASS,PASS,True,0,N/A,
+transistor,031.png,good,PASS,DEFECT,False,1,medium,a quality inspection photo showing a traffic light defect :
+transistor,032.png,good,PASS,DEFECT,False,1,medium,a quality inspection photo showing a traffic light defect :
+transistor,033.png,good,PASS,DEFECT,False,1,medium,a quality inspection photo showing a toothbrush defect :er
+transistor,034.png,good,PASS,DEFECT,False,1,medium,a quality inspection photo showing a traffic light defect :
+transistor,035.png,good,PASS,DEFECT,False,2,medium,a quality inspection photo showing a traffic light defect :
+transistor,036.png,good,PASS,PASS,True,0,N/A,
+transistor,037.png,good,PASS,DEFECT,False,2,medium,a quality inspection photo showing a person defect :s
+transistor,038.png,good,PASS,DEFECT,False,3,medium,a quality inspection photo showing a person defect :
+transistor,039.png,good,PASS,DEFECT,False,2,medium,a quality inspection photo showing a toothbrush defect :
+transistor,040.png,good,PASS,DEFECT,False,1,medium,a quality inspection photo showing a traffic light defect :
+transistor,041.png,good,PASS,DEFECT,False,2,medium,a quality inspection photo showing a person defect :s
+transistor,042.png,good,PASS,DEFECT,False,1,medium,a quality inspection photo showing a traffic light defect :
+transistor,043.png,good,PASS,DEFECT,False,2,medium,a quality inspection photo showing a person defect :s
+transistor,044.png,good,PASS,DEFECT,False,1,medium,a quality inspection photo showing a traffic light defect :
+transistor,045.png,good,PASS,DEFECT,False,2,medium,a quality inspection photo showing a person defect :
+transistor,046.png,good,PASS,DEFECT,False,1,medium,a quality inspection photo showing a traffic light defect :
+transistor,047.png,good,PASS,DEFECT,False,1,medium,a quality inspection photo showing a defect defect :
+transistor,048.png,good,PASS,PASS,True,0,N/A,
+transistor,049.png,good,PASS,DEFECT,False,1,medium,a quality inspection photo showing a traffic light defect :
+transistor,050.png,good,PASS,DEFECT,False,3,medium,a quality inspection photo showing a toothbrush defect :
+transistor,051.png,good,PASS,DEFECT,False,1,medium,a quality inspection photo showing a person defect :s
+transistor,052.png,good,PASS,DEFECT,False,1,medium,a quality inspection photo showing a traffic light defect :
+transistor,053.png,good,PASS,PASS,True,0,N/A,
+transistor,054.png,good,PASS,DEFECT,False,1,medium,a quality inspection photo showing a traffic light defect :
+transistor,055.png,good,PASS,DEFECT,False,2,medium,a quality inspection photo showing a scissors defect :
+transistor,056.png,good,PASS,DEFECT,False,1,medium,a quality inspection photo showing a person defect :
+transistor,057.png,good,PASS,DEFECT,False,1,medium,a quality inspection photo showing a toothbrush defect :
+transistor,058.png,good,PASS,PASS,True,0,N/A,
+transistor,059.png,good,PASS,DEFECT,False,2,medium,a quality inspection photo showing a person defect :
+transistor,000.png,misplaced,DEFECT,DEFECT,True,1,medium,a quality inspection photo showing a defect defect :
+transistor,001.png,misplaced,DEFECT,DEFECT,True,2,medium,a quality inspection photo showing a scissors defect :s
+transistor,002.png,misplaced,DEFECT,PASS,False,0,N/A,
+transistor,003.png,misplaced,DEFECT,PASS,False,0,N/A,
+transistor,004.png,misplaced,DEFECT,DEFECT,True,2,medium,a quality inspection photo showing a toothbrush defect :
+transistor,005.png,misplaced,DEFECT,DEFECT,True,1,medium,a quality inspection photo showing a traffic light defect :
+transistor,006.png,misplaced,DEFECT,PASS,False,0,N/A,
+transistor,007.png,misplaced,DEFECT,DEFECT,True,1,medium,a quality inspection photo showing a scissors defect :
+transistor,008.png,misplaced,DEFECT,DEFECT,True,2,medium,a quality inspection photo showing a airplane defect :e
+transistor,009.png,misplaced,DEFECT,DEFECT,True,1,medium,a quality inspection photo showing a scissors defect :s
+leather,000.png,color,DEFECT,PASS,False,0,N/A,
+leather,001.png,color,DEFECT,PASS,False,0,N/A,
+leather,002.png,color,DEFECT,PASS,False,0,N/A,
+leather,003.png,color,DEFECT,PASS,False,0,N/A,
+leather,004.png,color,DEFECT,PASS,False,0,N/A,
+leather,005.png,color,DEFECT,PASS,False,0,N/A,
+leather,006.png,color,DEFECT,PASS,False,0,N/A,
+leather,007.png,color,DEFECT,PASS,False,0,N/A,
+leather,008.png,color,DEFECT,PASS,False,0,N/A,
+leather,009.png,color,DEFECT,PASS,False,0,N/A,
+leather,010.png,color,DEFECT,PASS,False,0,N/A,
+leather,011.png,color,DEFECT,PASS,False,0,N/A,
+leather,012.png,color,DEFECT,PASS,False,0,N/A,
+leather,013.png,color,DEFECT,PASS,False,0,N/A,
+leather,014.png,color,DEFECT,PASS,False,0,N/A,
+leather,015.png,color,DEFECT,PASS,False,0,N/A,
+leather,016.png,color,DEFECT,PASS,False,0,N/A,
+leather,017.png,color,DEFECT,PASS,False,0,N/A,
+leather,018.png,color,DEFECT,PASS,False,0,N/A,
+leather,000.png,cut,DEFECT,PASS,False,0,N/A,
+leather,001.png,cut,DEFECT,PASS,False,0,N/A,
+leather,002.png,cut,DEFECT,PASS,False,0,N/A,
+leather,003.png,cut,DEFECT,DEFECT,True,1,medium,a quality inspection photo showing a bird defect :
+leather,004.png,cut,DEFECT,PASS,False,0,N/A,
+leather,005.png,cut,DEFECT,PASS,False,0,N/A,
+leather,006.png,cut,DEFECT,PASS,False,0,N/A,
+leather,007.png,cut,DEFECT,PASS,False,0,N/A,
+leather,008.png,cut,DEFECT,PASS,False,0,N/A,
+leather,009.png,cut,DEFECT,PASS,False,0,N/A,
+leather,010.png,cut,DEFECT,PASS,False,0,N/A,
+leather,011.png,cut,DEFECT,PASS,False,0,N/A,
+leather,012.png,cut,DEFECT,PASS,False,0,N/A,
+leather,013.png,cut,DEFECT,PASS,False,0,N/A,
+leather,014.png,cut,DEFECT,PASS,False,0,N/A,
+leather,015.png,cut,DEFECT,PASS,False,0,N/A,
+leather,016.png,cut,DEFECT,PASS,False,0,N/A,
+leather,017.png,cut,DEFECT,PASS,False,0,N/A,
+leather,018.png,cut,DEFECT,PASS,False,0,N/A,
+leather,000.png,fold,DEFECT,PASS,False,0,N/A,
+leather,001.png,fold,DEFECT,PASS,False,0,N/A,
+leather,002.png,fold,DEFECT,PASS,False,0,N/A,
+leather,003.png,fold,DEFECT,PASS,False,0,N/A,
+leather,004.png,fold,DEFECT,PASS,False,0,N/A,
+leather,005.png,fold,DEFECT,PASS,False,0,N/A,
+leather,006.png,fold,DEFECT,PASS,False,0,N/A,
+leather,007.png,fold,DEFECT,PASS,False,0,N/A,
+leather,008.png,fold,DEFECT,PASS,False,0,N/A,
+leather,009.png,fold,DEFECT,PASS,False,0,N/A,
+leather,010.png,fold,DEFECT,PASS,False,0,N/A,
+leather,011.png,fold,DEFECT,PASS,False,0,N/A,
+leather,012.png,fold,DEFECT,PASS,False,0,N/A,
+leather,013.png,fold,DEFECT,PASS,False,0,N/A,
+leather,014.png,fold,DEFECT,PASS,False,0,N/A,
+leather,015.png,fold,DEFECT,PASS,False,0,N/A,
+leather,016.png,fold,DEFECT,PASS,False,0,N/A,
+leather,000.png,glue,DEFECT,DEFECT,True,1,medium,a quality inspection photo showing a orange defect :e
+leather,001.png,glue,DEFECT,PASS,False,0,N/A,
+leather,002.png,glue,DEFECT,PASS,False,0,N/A,
+leather,003.png,glue,DEFECT,DEFECT,True,1,medium,a quality inspection photo showing a bird defect :
+leather,004.png,glue,DEFECT,PASS,False,0,N/A,
+leather,005.png,glue,DEFECT,PASS,False,0,N/A,
+leather,006.png,glue,DEFECT,PASS,False,0,N/A,
+leather,007.png,glue,DEFECT,PASS,False,0,N/A,
+leather,008.png,glue,DEFECT,PASS,False,0,N/A,
+leather,009.png,glue,DEFECT,PASS,False,0,N/A,
+leather,010.png,glue,DEFECT,PASS,False,0,N/A,
+leather,011.png,glue,DEFECT,PASS,False,0,N/A,
+leather,012.png,glue,DEFECT,PASS,False,0,N/A,
+leather,013.png,glue,DEFECT,PASS,False,0,N/A,
+leather,014.png,glue,DEFECT,DEFECT,True,1,medium,a quality inspection photo showing a sports ball defect :
+leather,015.png,glue,DEFECT,DEFECT,True,1,medium,a quality inspection photo showing a sports ball defect :
+leather,016.png,glue,DEFECT,PASS,False,0,N/A,
+leather,017.png,glue,DEFECT,DEFECT,True,2,medium,a quality inspection photo showing a carrot defect :
+leather,018.png,glue,DEFECT,PASS,False,0,N/A,
+leather,000.png,good,PASS,PASS,True,0,N/A,
+leather,001.png,good,PASS,PASS,True,0,N/A,
+leather,002.png,good,PASS,PASS,True,0,N/A,
+leather,003.png,good,PASS,PASS,True,0,N/A,
+leather,004.png,good,PASS,PASS,True,0,N/A,
+leather,005.png,good,PASS,PASS,True,0,N/A,
+leather,006.png,good,PASS,PASS,True,0,N/A,
+leather,007.png,good,PASS,PASS,True,0,N/A,
+leather,008.png,good,PASS,PASS,True,0,N/A,
+leather,009.png,good,PASS,PASS,True,0,N/A,
+leather,010.png,good,PASS,PASS,True,0,N/A,
+leather,011.png,good,PASS,PASS,True,0,N/A,
+leather,012.png,good,PASS,PASS,True,0,N/A,
+leather,013.png,good,PASS,PASS,True,0,N/A,
+leather,014.png,good,PASS,PASS,True,0,N/A,
+leather,015.png,good,PASS,PASS,True,0,N/A,
+leather,016.png,good,PASS,PASS,True,0,N/A,
+leather,017.png,good,PASS,PASS,True,0,N/A,
+leather,018.png,good,PASS,PASS,True,0,N/A,
+leather,019.png,good,PASS,PASS,True,0,N/A,
+leather,020.png,good,PASS,PASS,True,0,N/A,
+leather,021.png,good,PASS,PASS,True,0,N/A,
+leather,022.png,good,PASS,PASS,True,0,N/A,
+leather,023.png,good,PASS,PASS,True,0,N/A,
+leather,024.png,good,PASS,PASS,True,0,N/A,
+leather,025.png,good,PASS,PASS,True,0,N/A,
+leather,026.png,good,PASS,PASS,True,0,N/A,
+leather,027.png,good,PASS,PASS,True,0,N/A,
+leather,028.png,good,PASS,PASS,True,0,N/A,
+leather,029.png,good,PASS,PASS,True,0,N/A,
+leather,030.png,good,PASS,PASS,True,0,N/A,
+leather,031.png,good,PASS,PASS,True,0,N/A,
+leather,000.png,poke,DEFECT,PASS,False,0,N/A,
+leather,001.png,poke,DEFECT,PASS,False,0,N/A,
+leather,002.png,poke,DEFECT,PASS,False,0,N/A,
+leather,003.png,poke,DEFECT,PASS,False,0,N/A,
+leather,004.png,poke,DEFECT,PASS,False,0,N/A,
+leather,005.png,poke,DEFECT,PASS,False,0,N/A,
+leather,006.png,poke,DEFECT,PASS,False,0,N/A,
+leather,007.png,poke,DEFECT,PASS,False,0,N/A,
+leather,008.png,poke,DEFECT,PASS,False,0,N/A,
+leather,009.png,poke,DEFECT,PASS,False,0,N/A,
+leather,010.png,poke,DEFECT,PASS,False,0,N/A,
+leather,011.png,poke,DEFECT,PASS,False,0,N/A,
+leather,012.png,poke,DEFECT,PASS,False,0,N/A,
+leather,013.png,poke,DEFECT,PASS,False,0,N/A,
+leather,014.png,poke,DEFECT,PASS,False,0,N/A,
+leather,015.png,poke,DEFECT,PASS,False,0,N/A,
+leather,016.png,poke,DEFECT,PASS,False,0,N/A,
+leather,017.png,poke,DEFECT,PASS,False,0,N/A,
+toothbrush,000.png,defective,DEFECT,DEFECT,True,1,medium,a quality inspection photo showing a vase defect :
+toothbrush,001.png,defective,DEFECT,DEFECT,True,1,medium,a quality inspection photo showing a tie defect :e
+toothbrush,002.png,defective,DEFECT,PASS,False,0,N/A,
+toothbrush,003.png,defective,DEFECT,DEFECT,True,1,medium,a quality inspection photo showing a vase defect :
+toothbrush,004.png,defective,DEFECT,DEFECT,True,1,medium,a quality inspection photo showing a vase defect :
+toothbrush,005.png,defective,DEFECT,PASS,False,0,N/A,
+toothbrush,006.png,defective,DEFECT,DEFECT,True,1,medium,a quality inspection photo showing a vase defect :
+toothbrush,007.png,defective,DEFECT,DEFECT,True,2,medium,a quality inspection photo showing a vase defect :
+toothbrush,008.png,defective,DEFECT,DEFECT,True,1,medium,a quality inspection photo showing a tie defect :e
+toothbrush,009.png,defective,DEFECT,DEFECT,True,2,medium,a quality inspection photo showing a vase defect :
+toothbrush,010.png,defective,DEFECT,DEFECT,True,1,medium,a quality inspection photo showing a vase defect :e
+toothbrush,011.png,defective,DEFECT,DEFECT,True,1,medium,a quality inspection photo showing a vase defect :
+toothbrush,012.png,defective,DEFECT,DEFECT,True,1,medium,a quality inspection photo showing a vase defect :e
+toothbrush,013.png,defective,DEFECT,DEFECT,True,1,medium,a quality inspection photo showing a vase defect :e
+toothbrush,014.png,defective,DEFECT,DEFECT,True,2,medium,a quality inspection photo showing a carrot defect :s
+toothbrush,015.png,defective,DEFECT,DEFECT,True,1,medium,a quality inspection photo showing a vase defect :s
+toothbrush,016.png,defective,DEFECT,DEFECT,True,1,medium,a quality inspection photo showing a vase defect :e
+toothbrush,017.png,defective,DEFECT,DEFECT,True,1,medium,a quality inspection photo showing a vase defect :
+toothbrush,018.png,defective,DEFECT,DEFECT,True,1,medium,a quality inspection photo showing a vase defect :e
+toothbrush,019.png,defective,DEFECT,DEFECT,True,1,medium,a quality inspection photo showing a vase defect :e
+toothbrush,020.png,defective,DEFECT,DEFECT,True,1,medium,a quality inspection photo showing a vase defect :e
+toothbrush,021.png,defective,DEFECT,DEFECT,True,1,medium,a quality inspection photo showing a vase defect :s
+toothbrush,022.png,defective,DEFECT,DEFECT,True,1,medium,a quality inspection photo showing a vase defect :e
+toothbrush,023.png,defective,DEFECT,DEFECT,True,1,medium,a quality inspection photo showing a vase defect :e
+toothbrush,024.png,defective,DEFECT,DEFECT,True,1,medium,a quality inspection photo showing a vase defect :e
+toothbrush,025.png,defective,DEFECT,DEFECT,True,1,medium,a quality inspection photo showing a vase defect :e
+toothbrush,026.png,defective,DEFECT,DEFECT,True,1,medium,a quality inspection photo showing a vase defect :e
+toothbrush,027.png,defective,DEFECT,DEFECT,True,1,medium,a quality inspection photo showing a vase defect :e
+toothbrush,028.png,defective,DEFECT,PASS,False,0,N/A,
+toothbrush,029.png,defective,DEFECT,DEFECT,True,1,medium,a quality inspection photo showing a vase defect :s
+toothbrush,000.png,good,PASS,DEFECT,False,1,medium,a quality inspection photo showing a vase defect :
+toothbrush,001.png,good,PASS,DEFECT,False,1,medium,a quality inspection photo showing a tie defect :e
+toothbrush,002.png,good,PASS,DEFECT,False,1,medium,a quality inspection photo showing a vase defect :
+toothbrush,003.png,good,PASS,DEFECT,False,2,medium,a quality inspection photo showing a tie defect :er
+toothbrush,004.png,good,PASS,DEFECT,False,1,medium,a quality inspection photo showing a vase defect :
+toothbrush,005.png,good,PASS,DEFECT,False,1,medium,a quality inspection photo showing a vase defect :
+toothbrush,006.png,good,PASS,DEFECT,False,1,medium,a quality inspection photo showing a vase defect :
+toothbrush,007.png,good,PASS,DEFECT,False,1,medium,a quality inspection photo showing a vase defect :s
+toothbrush,008.png,good,PASS,DEFECT,False,1,medium,a quality inspection photo showing a vase defect :e
+toothbrush,009.png,good,PASS,DEFECT,False,1,medium,a quality inspection photo showing a vase defect :e
+toothbrush,010.png,good,PASS,DEFECT,False,1,medium,a quality inspection photo showing a vase defect :e
+toothbrush,011.png,good,PASS,DEFECT,False,1,medium,a quality inspection photo showing a vase defect :s
+bottle,000.png,broken_large,DEFECT,DEFECT,True,1,medium,a quality inspection photo showing a frisbee defect :
+bottle,001.png,broken_large,DEFECT,DEFECT,True,1,medium,a quality inspection photo showing a toilet defect :
+bottle,002.png,broken_large,DEFECT,DEFECT,True,1,medium,a quality inspection photo showing a bowl defect :
+bottle,003.png,broken_large,DEFECT,PASS,False,0,N/A,
+bottle,004.png,broken_large,DEFECT,DEFECT,True,1,medium,a quality inspection photo showing a toilet defect :
+bottle,005.png,broken_large,DEFECT,DEFECT,True,1,medium,a quality inspection photo showing a toilet defect :
+bottle,006.png,broken_large,DEFECT,PASS,False,0,N/A,
+bottle,007.png,broken_large,DEFECT,PASS,False,0,N/A,
+bottle,008.png,broken_large,DEFECT,DEFECT,True,1,medium,a quality inspection photo showing a bowl defect :
+bottle,009.png,broken_large,DEFECT,DEFECT,True,1,medium,a quality inspection photo showing a bowl defect :
+bottle,010.png,broken_large,DEFECT,PASS,False,0,N/A,
+bottle,011.png,broken_large,DEFECT,PASS,False,0,N/A,
+bottle,012.png,broken_large,DEFECT,DEFECT,True,2,medium,a quality inspection photo showing a clock defect :
+bottle,013.png,broken_large,DEFECT,DEFECT,True,1,medium,a quality inspection photo showing a bowl defect :
+bottle,014.png,broken_large,DEFECT,DEFECT,True,1,medium,a quality inspection photo showing a toilet defect :
+bottle,015.png,broken_large,DEFECT,PASS,False,0,N/A,
+bottle,016.png,broken_large,DEFECT,PASS,False,0,N/A,
+bottle,017.png,broken_large,DEFECT,DEFECT,True,1,medium,a quality inspection photo showing a bowl defect :
+bottle,018.png,broken_large,DEFECT,DEFECT,True,1,medium,a quality inspection photo showing a bowl defect :
+bottle,019.png,broken_large,DEFECT,DEFECT,True,1,medium,a quality inspection photo showing a frisbee defect :
+bottle,000.png,broken_small,DEFECT,DEFECT,True,1,medium,a quality inspection photo showing a clock defect :
+bottle,001.png,broken_small,DEFECT,PASS,False,0,N/A,
+bottle,002.png,broken_small,DEFECT,DEFECT,True,1,medium,a quality inspection photo showing a frisbee defect :
+bottle,003.png,broken_small,DEFECT,PASS,False,0,N/A,
+bottle,004.png,broken_small,DEFECT,DEFECT,True,1,medium,a quality inspection photo showing a toilet defect :
+bottle,005.png,broken_small,DEFECT,PASS,False,0,N/A,
+bottle,006.png,broken_small,DEFECT,PASS,False,0,N/A,
+bottle,007.png,broken_small,DEFECT,DEFECT,True,1,medium,a quality inspection photo showing a frisbee defect :
+bottle,008.png,broken_small,DEFECT,DEFECT,True,2,medium,a quality inspection photo showing a clock defect :
+bottle,009.png,broken_small,DEFECT,PASS,False,0,N/A,
+bottle,010.png,broken_small,DEFECT,PASS,False,0,N/A,
+bottle,011.png,broken_small,DEFECT,DEFECT,True,1,medium,a quality inspection photo showing a frisbee defect :
+bottle,012.png,broken_small,DEFECT,PASS,False,0,N/A,
+bottle,013.png,broken_small,DEFECT,PASS,False,0,N/A,
+bottle,014.png,broken_small,DEFECT,PASS,False,0,N/A,
+bottle,015.png,broken_small,DEFECT,DEFECT,True,1,medium,a quality inspection photo showing a frisbee defect :
+bottle,016.png,broken_small,DEFECT,PASS,False,0,N/A,
+bottle,017.png,broken_small,DEFECT,DEFECT,True,1,medium,a quality inspection photo showing a toilet defect :
+bottle,018.png,broken_small,DEFECT,PASS,False,0,N/A,
+bottle,019.png,broken_small,DEFECT,PASS,False,0,N/A,
+bottle,020.png,broken_small,DEFECT,PASS,False,0,N/A,
+bottle,021.png,broken_small,DEFECT,PASS,False,0,N/A,
+bottle,000.png,contamination,DEFECT,DEFECT,True,1,medium,a quality inspection photo showing a toilet defect :
+bottle,001.png,contamination,DEFECT,DEFECT,True,1,medium,a quality inspection photo showing a toilet defect :
+bottle,002.png,contamination,DEFECT,PASS,False,0,N/A,
+bottle,003.png,contamination,DEFECT,PASS,False,0,N/A,
+bottle,004.png,contamination,DEFECT,PASS,False,0,N/A,
+bottle,005.png,contamination,DEFECT,PASS,False,0,N/A,
+bottle,006.png,contamination,DEFECT,DEFECT,True,1,medium,a quality inspection photo showing a bowl defect :
+bottle,007.png,contamination,DEFECT,DEFECT,True,1,medium,a quality inspection photo showing a clock defect :
+bottle,008.png,contamination,DEFECT,DEFECT,True,1,medium,a quality inspection photo showing a frisbee defect :
+bottle,009.png,contamination,DEFECT,PASS,False,0,N/A,
+bottle,010.png,contamination,DEFECT,DEFECT,True,1,medium,a quality inspection photo showing a clock defect :
+bottle,011.png,contamination,DEFECT,PASS,False,0,N/A,
+bottle,012.png,contamination,DEFECT,PASS,False,0,N/A,
+bottle,013.png,contamination,DEFECT,DEFECT,True,1,medium,a quality inspection photo showing a frisbee defect :er
+bottle,014.png,contamination,DEFECT,PASS,False,0,N/A,
+bottle,015.png,contamination,DEFECT,PASS,False,0,N/A,
+bottle,016.png,contamination,DEFECT,PASS,False,0,N/A,
+bottle,017.png,contamination,DEFECT,DEFECT,True,1,medium,a quality inspection photo showing a clock defect :
+bottle,018.png,contamination,DEFECT,DEFECT,True,1,medium,a quality inspection photo showing a spoon defect :
+bottle,019.png,contamination,DEFECT,DEFECT,True,1,medium,a quality inspection photo showing a frisbee defect :
+bottle,020.png,contamination,DEFECT,PASS,False,0,N/A,
+bottle,000.png,good,PASS,PASS,True,0,N/A,
+bottle,001.png,good,PASS,PASS,True,0,N/A,
+bottle,002.png,good,PASS,PASS,True,0,N/A,
+bottle,003.png,good,PASS,PASS,True,0,N/A,
+bottle,004.png,good,PASS,PASS,True,0,N/A,
+bottle,005.png,good,PASS,PASS,True,0,N/A,
+bottle,006.png,good,PASS,DEFECT,False,2,medium,a quality inspection photo showing a clock defect :
+bottle,007.png,good,PASS,PASS,True,0,N/A,
+bottle,008.png,good,PASS,DEFECT,False,1,medium,a quality inspection photo showing a frisbee defect :
+bottle,009.png,good,PASS,DEFECT,False,1,medium,a quality inspection photo showing a frisbee defect :
+bottle,010.png,good,PASS,DEFECT,False,1,medium,a quality inspection photo showing a frisbee defect :
+bottle,011.png,good,PASS,PASS,True,0,N/A,
+bottle,012.png,good,PASS,PASS,True,0,N/A,
+bottle,013.png,good,PASS,PASS,True,0,N/A,
+bottle,014.png,good,PASS,PASS,True,0,N/A,
+bottle,015.png,good,PASS,PASS,True,0,N/A,
+bottle,016.png,good,PASS,DEFECT,False,1,medium,a quality inspection photo showing a frisbee defect :
+bottle,017.png,good,PASS,PASS,True,0,N/A,
+bottle,018.png,good,PASS,PASS,True,0,N/A,
+bottle,019.png,good,PASS,DEFECT,False,1,medium,a quality inspection photo showing a frisbee defect :
+grid,000.png,bent,DEFECT,PASS,False,0,N/A,
+grid,001.png,bent,DEFECT,PASS,False,0,N/A,
+grid,002.png,bent,DEFECT,PASS,False,0,N/A,
+grid,003.png,bent,DEFECT,PASS,False,0,N/A,
+grid,004.png,bent,DEFECT,PASS,False,0,N/A,
+grid,005.png,bent,DEFECT,PASS,False,0,N/A,
+grid,006.png,bent,DEFECT,PASS,False,0,N/A,
+grid,007.png,bent,DEFECT,PASS,False,0,N/A,
+grid,008.png,bent,DEFECT,PASS,False,0,N/A,
+grid,009.png,bent,DEFECT,PASS,False,0,N/A,
+grid,010.png,bent,DEFECT,PASS,False,0,N/A,
+grid,011.png,bent,DEFECT,PASS,False,0,N/A,
+grid,000.png,broken,DEFECT,PASS,False,0,N/A,
+grid,001.png,broken,DEFECT,DEFECT,True,1,medium,a quality inspection photo showing a bed defect :e
+grid,002.png,broken,DEFECT,PASS,False,0,N/A,
+grid,003.png,broken,DEFECT,PASS,False,0,N/A,
+grid,004.png,broken,DEFECT,PASS,False,0,N/A,
+grid,005.png,broken,DEFECT,PASS,False,0,N/A,
+grid,006.png,broken,DEFECT,PASS,False,0,N/A,
+grid,007.png,broken,DEFECT,PASS,False,0,N/A,
+grid,008.png,broken,DEFECT,PASS,False,0,N/A,
+grid,009.png,broken,DEFECT,PASS,False,0,N/A,
+grid,010.png,broken,DEFECT,PASS,False,0,N/A,
+grid,011.png,broken,DEFECT,DEFECT,True,1,medium,a quality inspection photo showing a clock defect :
+grid,000.png,glue,DEFECT,PASS,False,0,N/A,
+grid,001.png,glue,DEFECT,PASS,False,0,N/A,
+grid,002.png,glue,DEFECT,PASS,False,0,N/A,
+grid,003.png,glue,DEFECT,PASS,False,0,N/A,
+grid,004.png,glue,DEFECT,PASS,False,0,N/A,
+grid,005.png,glue,DEFECT,PASS,False,0,N/A,
+grid,006.png,glue,DEFECT,PASS,False,0,N/A,
+grid,007.png,glue,DEFECT,PASS,False,0,N/A,
+grid,008.png,glue,DEFECT,DEFECT,True,1,medium,a quality inspection photo showing a tie defect :e
+grid,009.png,glue,DEFECT,DEFECT,True,1,medium,a quality inspection photo showing a defect defect :
+grid,010.png,glue,DEFECT,DEFECT,True,1,medium,a quality inspection photo showing a defect defect :
+grid,000.png,good,PASS,PASS,True,0,N/A,
+grid,001.png,good,PASS,PASS,True,0,N/A,
+grid,002.png,good,PASS,PASS,True,0,N/A,
+grid,003.png,good,PASS,PASS,True,0,N/A,
+grid,004.png,good,PASS,PASS,True,0,N/A,
+grid,005.png,good,PASS,PASS,True,0,N/A,
+grid,006.png,good,PASS,PASS,True,0,N/A,
+grid,007.png,good,PASS,PASS,True,0,N/A,
+grid,008.png,good,PASS,PASS,True,0,N/A,
+grid,009.png,good,PASS,PASS,True,0,N/A,
+grid,010.png,good,PASS,PASS,True,0,N/A,
+grid,011.png,good,PASS,PASS,True,0,N/A,
+grid,012.png,good,PASS,PASS,True,0,N/A,
+grid,013.png,good,PASS,PASS,True,0,N/A,
+grid,014.png,good,PASS,PASS,True,0,N/A,
+grid,015.png,good,PASS,PASS,True,0,N/A,
+grid,016.png,good,PASS,PASS,True,0,N/A,
+grid,017.png,good,PASS,PASS,True,0,N/A,
+grid,018.png,good,PASS,PASS,True,0,N/A,
+grid,019.png,good,PASS,PASS,True,0,N/A,
+grid,020.png,good,PASS,PASS,True,0,N/A,
+grid,000.png,metal_contamination,DEFECT,PASS,False,0,N/A,
+grid,001.png,metal_contamination,DEFECT,PASS,False,0,N/A,
+grid,002.png,metal_contamination,DEFECT,PASS,False,0,N/A,
+grid,003.png,metal_contamination,DEFECT,PASS,False,0,N/A,
+grid,004.png,metal_contamination,DEFECT,PASS,False,0,N/A,
+grid,005.png,metal_contamination,DEFECT,PASS,False,0,N/A,
+grid,006.png,metal_contamination,DEFECT,PASS,False,0,N/A,
+grid,007.png,metal_contamination,DEFECT,PASS,False,0,N/A,
+grid,008.png,metal_contamination,DEFECT,PASS,False,0,N/A,
+grid,009.png,metal_contamination,DEFECT,PASS,False,0,N/A,
+grid,010.png,metal_contamination,DEFECT,PASS,False,0,N/A,
+grid,000.png,thread,DEFECT,PASS,False,0,N/A,
+grid,001.png,thread,DEFECT,PASS,False,0,N/A,
+grid,002.png,thread,DEFECT,PASS,False,0,N/A,
+grid,003.png,thread,DEFECT,PASS,False,0,N/A,
+grid,004.png,thread,DEFECT,DEFECT,True,1,medium,a quality inspection photo showing a bed defect :s
+grid,005.png,thread,DEFECT,PASS,False,0,N/A,
+grid,006.png,thread,DEFECT,PASS,False,0,N/A,
+grid,007.png,thread,DEFECT,PASS,False,0,N/A,
+grid,008.png,thread,DEFECT,PASS,False,0,N/A,
+grid,009.png,thread,DEFECT,PASS,False,0,N/A,
+grid,010.png,thread,DEFECT,PASS,False,0,N/A,

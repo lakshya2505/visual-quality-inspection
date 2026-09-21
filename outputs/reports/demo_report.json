@@ -1,0 +1,64 @@
+{
+  "image": "data/samples/demo_product.jpg",
+  "timestamp": "2026-09-15T22:47:34",
+  "verdict": "REWORK",
+  "defect_count": 3,
+  "max_severity": "medium",
+  "total_time_ms": 152.7,
+  "defects": [
+    {
+      "class": "scratch",
+      "confidence": 0.87,
+      "severity": "low",
+      "bbox": [
+        195,
+        145,
+        290,
+        260
+      ],
+      "vlm_analysis": {
+        "defect_class": "scratch",
+        "severity": "low",
+        "description": "[MOCK] A low-severity scratch detected in the inspection region.",
+        "recommended_action": "inspect_further",
+        "confidence_text": "High confidence \u2014 mock backend always returns preset values."
+      }
+    },
+    {
+      "class": "contamination",
+      "confidence": 0.72,
+      "severity": "medium",
+      "bbox": [
+        330,
+        160,
+        375,
+        205
+      ],
+      "vlm_analysis": {
+        "defect_class": "contamination",
+        "severity": "medium",
+        "description": "[MOCK] A medium-severity contamination detected in the inspection region.",
+        "recommended_action": "inspect_further",
+        "confidence_text": "High confidence \u2014 mock backend always returns preset values."
+      }
+    },
+    {
+      "class": "dent",
+      "confidence": 0.65,
+      "severity": "medium",
+      "bbox": [
+        378,
+        272,
+        462,
+        328
+      ],
+      "vlm_analysis": {
+        "defect_class": "dent",
+        "severity": "medium",
+        "description": "[MOCK] A medium-severity dent detected in the inspection region.",
+        "recommended_action": "inspect_further",
+        "confidence_text": "High confidence \u2014 mock backend always returns preset values."
+      }
+    }
+  ]
+}
