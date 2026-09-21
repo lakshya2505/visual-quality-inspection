@@ -8,6 +8,10 @@
   <link rel="preconnect" href="https://fonts.googleapis.com">
   <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700;800&family=JetBrains+Mono:wght@400;500;600&display=swap" rel="stylesheet">
 
+  <!-- Three.js & OrbitControls for Interactive 3D Surface Topography -->
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/three.js/r128/three.min.js"></script>
+  <script src="https://cdn.jsdelivr.net/npm/three@0.128.0/examples/js/controls/OrbitControls.js"></script>
+
   <style>
     /* ─── Design Tokens ─────────────────────────────────────── */
     :root {
@@ -595,6 +599,193 @@
       object-fit: contain;
     }
 
+    /* ─── Split Difference Slider ────────────────────────── */
+    .slider-wrapper {
+      position: relative;
+      width: 100%;
+      height: 480px;
+      overflow: hidden;
+      border-radius: var(--radius-sm);
+      border: 1px solid var(--border);
+      background: #000;
+      user-select: none;
+      touch-action: none;
+    }
+    .slider-img {
+      position: absolute;
+      top: 0; left: 0;
+      width: 100%; height: 100%;
+      object-fit: contain;
+      pointer-events: none;
+    }
+    .slider-img-overlay {
+      position: absolute;
+      top: 0; left: 0;
+      width: 100%; height: 100%;
+      overflow: hidden;
+      clip-path: polygon(0 0, 50% 0, 50% 100%, 0 100%);
+    }
+    .slider-divider {
+      position: absolute;
+      top: 0; bottom: 0;
+      left: 50%;
+      width: 3px;
+      background: var(--cyan);
+      box-shadow: 0 0 12px var(--cyan);
+      cursor: ew-resize;
+      z-index: 20;
+    }
+    .slider-handle {
+      position: absolute;
+      top: 50%; left: 50%;
+      transform: translate(-50%, -50%);
+      width: 40px; height: 40px;
+      border-radius: 50%;
+      background: rgba(4,9,15,0.92);
+      border: 2px solid var(--cyan);
+      box-shadow: 0 0 16px rgba(0,212,255,0.6);
+      display: flex; align-items: center; justify-content: center;
+      color: var(--cyan);
+      font-size: 0.95rem;
+      cursor: ew-resize;
+      z-index: 21;
+    }
+    .slider-badge-left, .slider-badge-right {
+      position: absolute;
+      bottom: 14px;
+      padding: 5px 12px;
+      border-radius: 6px;
+      font-size: 0.72rem;
+      font-weight: 700;
+      font-family: 'JetBrains Mono', monospace;
+      z-index: 15;
+      backdrop-filter: blur(8px);
+      text-transform: uppercase;
+    }
+    .slider-badge-left {
+      left: 14px;
+      background: rgba(0,0,0,0.7);
+      color: #fff;
+      border: 1px solid rgba(255,255,255,0.2);
+    }
+    .slider-badge-right {
+      right: 14px;
+      background: var(--cyan-dim);
+      color: var(--cyan);
+      border: 1px solid rgba(0,212,255,0.4);
+    }
+
+    .slider-controls-bar {
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      gap: 12px;
+      margin-top: 14px;
+      flex-wrap: wrap;
+    }
+    .layer-selector {
+      display: flex;
+      background: rgba(0,0,0,0.4);
+      padding: 4px;
+      border-radius: 8px;
+      border: 1px solid var(--border);
+      gap: 4px;
+    }
+    .layer-btn {
+      padding: 6px 14px;
+      border-radius: 6px;
+      font-size: 0.76rem;
+      font-weight: 600;
+      border: none;
+      background: transparent;
+      color: var(--text2);
+      cursor: pointer;
+      transition: all .2s;
+    }
+    .layer-btn.active {
+      background: var(--cyan-dim);
+      color: var(--cyan);
+      border: 1px solid rgba(0,212,255,0.3);
+    }
+
+    /* ─── 3D Topography Viewer ────────────────────────────── */
+    .three-wrapper {
+      position: relative;
+      width: 100%;
+      height: 480px;
+      border-radius: var(--radius-sm);
+      border: 1px solid var(--border);
+      background: radial-gradient(circle at center, #071322 0%, #03070d 100%);
+      overflow: hidden;
+    }
+    #three-viewport {
+      width: 100%; height: 100%;
+      display: block;
+    }
+    .three-hud {
+      position: absolute;
+      top: 14px; left: 14px;
+      z-index: 10;
+      display: flex;
+      flex-direction: column;
+      gap: 8px;
+      pointer-events: none;
+    }
+    .three-hud-badge {
+      background: rgba(4,9,15,0.85);
+      border: 1px solid var(--border);
+      border-radius: 6px;
+      padding: 6px 12px;
+      font-size: 0.75rem;
+      backdrop-filter: blur(8px);
+      display: flex;
+      align-items: center;
+      gap: 8px;
+    }
+    .three-controls-bar {
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      gap: 16px;
+      margin-top: 14px;
+      background: rgba(0,0,0,0.3);
+      padding: 12px 16px;
+      border-radius: var(--radius-sm);
+      border: 1px solid var(--border);
+      flex-wrap: wrap;
+    }
+    .control-group {
+      display: flex;
+      align-items: center;
+      gap: 10px;
+      font-size: 0.8rem;
+      color: var(--text2);
+    }
+    .range-input {
+      accent-color: var(--cyan);
+      cursor: pointer;
+    }
+    .three-action-btn {
+      padding: 6px 14px;
+      border-radius: 6px;
+      font-size: 0.78rem;
+      font-weight: 600;
+      border: 1px solid var(--border);
+      background: rgba(255,255,255,0.04);
+      color: var(--text);
+      cursor: pointer;
+      transition: all .2s;
+    }
+    .three-action-btn:hover {
+      border-color: var(--cyan);
+      color: var(--cyan);
+    }
+    .three-action-btn.active {
+      background: var(--cyan-dim);
+      color: var(--cyan);
+      border-color: var(--cyan);
+    }
+
     .hidden { display: none !important; }
   </style>
 </head>
@@ -758,6 +949,8 @@
 
           <div class="tabs" id="result-tabs">
             <button class="tab active" onclick="showTab('output', this)" id="tab-output-btn">📸 Annotated Output</button>
+            <button class="tab" onclick="showTab('slider', this)" id="tab-slider-btn">🌓 Split Diff Slider</button>
+            <button class="tab" onclick="showTab('three3d', this)" id="tab-three-btn">🧊 3D Topography</button>
             <button class="tab" onclick="showTab('preprocessing', this)" id="tab-prep-btn">🔧 2x2 IPA Preprocessing</button>
             <button class="tab" onclick="showTab('defects', this)">🔴 Defect & FFT Analysis</button>
           </div>
@@ -769,6 +962,75 @@
                 <video id="annotated-video" controls autoplay loop playsinline class="hidden"></video>
               </div>
               <div class="image-stats-row mt12" id="img-stats-row"></div>
+            </div>
+
+            <!-- Panel: Split Difference Slider -->
+            <div class="tab-panel" id="panel-slider">
+              <div class="slider-wrapper" id="diff-slider-container">
+                <img id="slider-before-img" class="slider-img" src="" alt="Raw Target">
+                <div class="slider-img-overlay" id="slider-overlay">
+                  <img id="slider-after-img" class="slider-img" src="" alt="Anomaly Layer">
+                </div>
+                <div class="slider-divider" id="slider-divider">
+                  <div class="slider-handle">↔</div>
+                </div>
+                <span class="slider-badge-left" id="badge-left-lbl">Raw Input</span>
+                <span class="slider-badge-right" id="badge-right-lbl">Thermal Anomaly</span>
+              </div>
+
+              <div class="slider-controls-bar">
+                <div class="control-group">
+                  <span>Layer Mode:</span>
+                  <div class="layer-selector">
+                    <button class="layer-btn active" onclick="setSliderMode('thermal', this)">🔥 Thermal Anomaly</button>
+                    <button class="layer-btn" onclick="setSliderMode('annotated', this)">🎯 YOLO Boxes</button>
+                    <button class="layer-btn" onclick="setSliderMode('blended', this)">🌈 Alpha Blended</button>
+                  </div>
+                </div>
+                <div style="font-size:0.75rem; color:var(--text3);">
+                  💡 <em>Drag the cyan divider horizontally to wipe across layers.</em>
+                </div>
+              </div>
+            </div>
+
+            <!-- Panel: 3D Surface Roughness Topography -->
+            <div class="tab-panel" id="panel-three3d">
+              <div class="three-wrapper">
+                <div id="three-viewport"></div>
+                <div class="three-hud">
+                  <div class="three-hud-badge">
+                    <span style="color:var(--cyan); font-weight:700;">Ra Index:</span>
+                    <span id="three-ra-val" style="color:#fff; font-weight:700;">-- µm</span>
+                    <span style="color:var(--text2); font-size:0.7rem;">(Surface Roughness)</span>
+                  </div>
+                  <div class="three-hud-badge">
+                    <span style="color:var(--purple); font-weight:700;">Mesh:</span>
+                    <span style="color:#fff;">128×128 (16,384 Vertices)</span>
+                  </div>
+                </div>
+              </div>
+
+              <div class="three-controls-bar">
+                <div class="control-group">
+                  <label for="elevation-slider">Elevation Relief:</label>
+                  <input type="range" id="elevation-slider" class="range-input" min="1" max="15" value="4" oninput="updateElevationScale(this.value)">
+                  <span id="elevation-val" style="color:var(--cyan); font-weight:600; min-width:32px;">4x</span>
+                </div>
+
+                <div class="control-group">
+                  <button class="three-action-btn" id="wireframe-btn" onclick="toggleWireframe()">🕸️ Wireframe</button>
+                  <button class="three-action-btn" onclick="resetThreeCamera()">🔄 Reset View</button>
+                </div>
+
+                <div class="control-group">
+                  <span>Theme:</span>
+                  <div class="layer-selector">
+                    <button class="layer-btn active" onclick="setThreeTheme('cyan', this)">Cyber</button>
+                    <button class="layer-btn" onclick="setThreeTheme('gold', this)">Gold</button>
+                    <button class="layer-btn" onclick="setThreeTheme('thermal', this)">Thermal</button>
+                  </div>
+                </div>
+              </div>
             </div>
 
             <div class="tab-panel" id="panel-preprocessing">
@@ -1317,14 +1579,268 @@
       </div>`;
   }
 
+  // ── Three.js & Split Slider Global State ───────────────────────
+  let currentInspectionData = null;
+  let currentSliderMode = 'thermal';
+  let threeScene, threeCamera, threeRenderer, threeControls, threeMesh, threeMaterial;
+  let currentElevationScale = 4.0;
+  let isWireframe = false;
+  let currentThreeTheme = 'cyan';
+  let heightmapGridCache = null;
+
+  function initSplitSlider() {
+    const container = document.getElementById('diff-slider-container');
+    const divider   = document.getElementById('slider-divider');
+    const overlay   = document.getElementById('slider-overlay');
+    if (!container || !divider || !overlay) return;
+
+    let isDragging = false;
+
+    function moveSlider(clientX) {
+      const rect = container.getBoundingClientRect();
+      let x = clientX - rect.left;
+      x = Math.max(0, Math.min(x, rect.width));
+      const pct = (x / rect.width) * 100;
+
+      divider.style.left = pct + '%';
+      overlay.style.clipPath = `polygon(0 0, ${pct}% 0, ${pct}% 100%, 0 100%)`;
+    }
+
+    divider.addEventListener('mousedown', () => { isDragging = true; });
+    container.addEventListener('mousedown', e => { isDragging = true; moveSlider(e.clientX); });
+    window.addEventListener('mouseup', () => { isDragging = false; });
+    window.addEventListener('mousemove', e => { if (isDragging) moveSlider(e.clientX); });
+
+    // Touch support
+    divider.addEventListener('touchstart', () => { isDragging = true; }, { passive: true });
+    container.addEventListener('touchstart', e => { isDragging = true; moveSlider(e.touches[0].clientX); }, { passive: true });
+    window.addEventListener('touchend', () => { isDragging = false; });
+    window.addEventListener('touchmove', e => { if (isDragging) moveSlider(e.touches[0].clientX); }, { passive: true });
+  }
+
+  function setSliderMode(mode, btn) {
+    currentSliderMode = mode;
+    if (btn) {
+      btn.parentElement.querySelectorAll('.layer-btn').forEach(b => b.classList.remove('active'));
+      btn.classList.add('active');
+    }
+    const afterImg = document.getElementById('slider-after-img');
+    const rightLbl = document.getElementById('badge-right-lbl');
+    if (!currentInspectionData || !afterImg) return;
+
+    if (mode === 'thermal') {
+      afterImg.src = currentInspectionData.anomaly_heatmap || currentInspectionData.annotated_image;
+      if (rightLbl) rightLbl.textContent = 'Thermal Anomaly';
+    } else if (mode === 'annotated') {
+      afterImg.src = currentInspectionData.annotated_image;
+      if (rightLbl) rightLbl.textContent = 'YOLO Annotations';
+    } else if (mode === 'blended') {
+      afterImg.src = currentInspectionData.blended_heatmap || currentInspectionData.anomaly_heatmap;
+      if (rightLbl) rightLbl.textContent = 'Alpha Blended';
+    }
+  }
+
+  function initThreeScene() {
+    const container = document.getElementById('three-viewport');
+    if (!container || threeRenderer) return;
+
+    const width  = container.clientWidth || 600;
+    const height = container.clientHeight || 480;
+
+    threeScene = new THREE.Scene();
+    threeCamera = new THREE.PerspectiveCamera(45, width / height, 0.1, 1000);
+    threeCamera.position.set(0, -12, 14);
+
+    threeRenderer = new THREE.WebGLRenderer({ antialias: true, alpha: true });
+    threeRenderer.setSize(width, height);
+    threeRenderer.setPixelRatio(Math.min(window.devicePixelRatio, 2));
+    container.appendChild(threeRenderer.domElement);
+
+    if (typeof THREE.OrbitControls !== 'undefined') {
+      threeControls = new THREE.OrbitControls(threeCamera, threeRenderer.domElement);
+      threeControls.enableDamping = true;
+      threeControls.dampingFactor = 0.05;
+      threeControls.maxPolarAngle = Math.PI / 2 - 0.05; // Prevent flipping upside down
+    }
+
+    // Lighting
+    const ambientLight = new THREE.AmbientLight(0xffffff, 0.65);
+    threeScene.add(ambientLight);
+
+    const dirLight1 = new THREE.DirectionalLight(0x00d4ff, 1.2);
+    dirLight1.position.set(10, 15, 20);
+    threeScene.add(dirLight1);
+
+    const dirLight2 = new THREE.DirectionalLight(0xff4466, 0.5);
+    dirLight2.position.set(-10, -15, -10);
+    threeScene.add(dirLight2);
+
+    // Animation loop
+    function animate() {
+      requestAnimationFrame(animate);
+      if (threeControls) threeControls.update();
+      if (threeRenderer && threeScene && threeCamera) {
+        threeRenderer.render(threeScene, threeCamera);
+      }
+    }
+    animate();
+
+    window.addEventListener('resize', onWindowResizeThree);
+  }
+
+  function onWindowResizeThree() {
+    const container = document.getElementById('three-viewport');
+    if (!container || !threeRenderer || !threeCamera) return;
+    const width  = container.clientWidth;
+    const height = container.clientHeight || 480;
+    if (width > 0 && height > 0) {
+      threeCamera.aspect = width / height;
+      threeCamera.updateProjectionMatrix();
+      threeRenderer.setSize(width, height);
+    }
+  }
+
+  function updateThreeMesh(grid, theme = currentThreeTheme) {
+    if (!grid || !threeScene) return;
+    heightmapGridCache = grid;
+
+    if (threeMesh) {
+      threeScene.remove(threeMesh);
+      threeMesh.geometry.dispose();
+      threeMesh.material.dispose();
+      threeMesh = null;
+    }
+
+    const rows = grid.length;
+    const cols = grid[0].length;
+    const geometry = new THREE.PlaneGeometry(12, 12, cols - 1, rows - 1);
+    const pos = geometry.attributes.position;
+    const colors = [];
+
+    // Theme color palettes
+    const getThemeColor = (val, z) => {
+      if (theme === 'cyan') {
+        const c = new THREE.Color().setHSL(0.52 + z * 0.1, 0.9, 0.35 + z * 0.45);
+        return c;
+      } else if (theme === 'gold') {
+        const c = new THREE.Color().setHSL(0.11 + z * 0.05, 0.95, 0.25 + z * 0.55);
+        return c;
+      } else { // Thermal Jet
+        const c = new THREE.Color().setHSL((1.0 - Math.min(1.0, val * 1.2)) * 0.7, 1.0, 0.5);
+        return c;
+      }
+    };
+
+    let pIdx = 0;
+    for (let r = 0; r < rows; r++) {
+      for (let c = 0; c < cols; c++) {
+        const val = grid[r][c];
+        const z = (val - 0.5) * currentElevationScale;
+        pos.setZ(pIdx, z);
+
+        const col = getThemeColor(val, val);
+        colors.push(col.r, col.g, col.b);
+        pIdx++;
+      }
+    }
+
+    geometry.setAttribute('color', new THREE.Float32BufferAttribute(colors, 3));
+    pos.needsUpdate = true;
+    geometry.computeVertexNormals();
+
+    threeMaterial = new THREE.MeshStandardMaterial({
+      vertexColors: true,
+      roughness: 0.25,
+      metalness: 0.65,
+      wireframe: isWireframe,
+      side: THREE.DoubleSide
+    });
+
+    threeMesh = new THREE.Mesh(geometry, threeMaterial);
+    threeMesh.rotation.x = -Math.PI / 3;
+    threeScene.add(threeMesh);
+  }
+
+  function updateElevationScale(val) {
+    currentElevationScale = parseFloat(val);
+    document.getElementById('elevation-val').textContent = `${val}x`;
+    if (heightmapGridCache) {
+      updateThreeMesh(heightmapGridCache, currentThreeTheme);
+    }
+  }
+
+  function toggleWireframe() {
+    isWireframe = !isWireframe;
+    const btn = document.getElementById('wireframe-btn');
+    if (btn) btn.classList.toggle('active', isWireframe);
+    if (threeMaterial) {
+      threeMaterial.wireframe = isWireframe;
+    }
+  }
+
+  function setThreeTheme(theme, btn) {
+    currentThreeTheme = theme;
+    if (btn) {
+      btn.parentElement.querySelectorAll('.layer-btn').forEach(b => b.classList.remove('active'));
+      btn.classList.add('active');
+    }
+    if (heightmapGridCache) {
+      updateThreeMesh(heightmapGridCache, currentThreeTheme);
+    }
+  }
+
+  function resetThreeCamera() {
+    if (!threeCamera || !threeControls) return;
+    threeCamera.position.set(0, -12, 14);
+    threeControls.target.set(0, 0, 0);
+    threeControls.update();
+  }
+
   function showTab(name, btn) {
     document.querySelectorAll('.tab').forEach(t => t.classList.remove('active'));
     if (btn) btn.classList.add('active');
-    ['output', 'preprocessing', 'defects'].forEach(t => {
+    ['output', 'slider', 'three3d', 'preprocessing', 'defects'].forEach(t => {
       const panel = document.getElementById(`panel-${t}`);
       if (panel) panel.classList.toggle('active', t === name);
     });
+
+    if (name === 'three3d') {
+      setTimeout(onWindowResizeThree, 50);
+    }
   }
+
+  // Update renderResults to populate Slider and 3D Topography
+  const _origRenderResults = renderResults;
+  renderResults = function(data) {
+    currentInspectionData = data;
+    _origRenderResults(data);
+
+    if (data.type !== 'video') {
+      // Setup Split Difference Slider
+      const beforeImg = document.getElementById('slider-before-img');
+      const afterImg  = document.getElementById('slider-after-img');
+      if (beforeImg && afterImg) {
+        beforeImg.src = data.raw_image || data.annotated_image;
+        afterImg.src  = data.anomaly_heatmap || data.annotated_image;
+        setSliderMode('thermal', document.querySelector('.slider-controls-bar .layer-btn'));
+      }
+
+      // Setup Three.js 3D Topography
+      if (data.heightmap_grid) {
+        if (!threeScene) initThreeScene();
+        updateThreeMesh(data.heightmap_grid, currentThreeTheme);
+        const raEl = document.getElementById('three-ra-val');
+        if (raEl && data.ra_roughness !== undefined) {
+          raEl.textContent = `${data.ra_roughness} µm`;
+        }
+      }
+    }
+  };
+
+  // Initialize Split Slider on load
+  document.addEventListener('DOMContentLoaded', () => {
+    initSplitSlider();
+  });
 
   function switchNav(mode) {
     document.getElementById('nav-live-btn').classList.toggle('active', mode === 'live');

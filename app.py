@@ -31,6 +31,7 @@ sys.path.insert(0, str(Path(__file__).resolve().parent))
 from src.detection.yolo_detector import YOLODefectDetector
 from src.vlm.vlm_analyzer import VLMAnalyzer
 from src.utils.frequency_analysis import extract_frequency_features, generate_frequency_b64
+from src.utils.heatmap_generator import generate_anomaly_heatmap
 
 app = Flask(__name__)
 
@@ -324,6 +325,9 @@ def analyze_image():
     annotated = detector.annotate_image(frame, det)
     vlm_ms = round((time.perf_counter() - t_vlm) * 1000)
 
+    # 5. Pixel Anomaly Heatmap & 3D Surface Topography Heightmap
+    diff_norm, heatmap_img, blended_heatmap, heightmap_grid, ra_roughness = generate_anomaly_heatmap(frame)
+
     # Verdict
     if defects:
         max_sev = max(
@@ -352,6 +356,11 @@ def analyze_image():
         "max_severity":     max_sev,
         "total_detections": len(defects),
         "annotated_image":  to_b64(annotated),
+        "raw_image":        to_b64(frame),
+        "anomaly_heatmap":  to_b64(heatmap_img),
+        "blended_heatmap":  to_b64(blended_heatmap),
+        "heightmap_grid":   heightmap_grid,
+        "ra_roughness":     ra_roughness,
         "timing": {
             "preprocessing_ms": prep_ms,
             "yolo_ms":          yolo_ms,
