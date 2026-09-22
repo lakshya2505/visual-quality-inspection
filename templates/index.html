@@ -3,8 +3,8 @@
 <head>
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <title>Visual Quality Inspection System | YOLOv8 + BLIP + 2D FFT</title>
-  <meta name="description" content="Automated industrial defect detection using YOLOv8, 2D FFT Frequency Analysis, and BLIP Vision-Language Model with Uncertainty Quantification">
+  <title>Visual Quality Inspection System | YOLOv8 + Florence-2 VLM + 2D FFT</title>
+  <meta name="description" content="Automated industrial defect detection using YOLOv8, 2D FFT Frequency Analysis, and Microsoft Florence-2 Vision-Language Model with Uncertainty Quantification">
   <link rel="preconnect" href="https://fonts.googleapis.com">
   <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700;800&family=JetBrains+Mono:wght@400;500;600&display=swap" rel="stylesheet">
 
@@ -798,7 +798,7 @@
       <span class="logo-icon">🏭</span>
       <div>
         <h1>Visual Quality Inspection System</h1>
-        <p>YOLOv8 + 2D FFT Frequency Engine + Salesforce BLIP VLM + Uncertainty Quantification</p>
+        <p>YOLOv8 + 2D FFT Frequency Engine + Microsoft Florence-2 VLM + Uncertainty Quantification</p>
       </div>
     </div>
 
@@ -905,12 +905,12 @@
               <div class="step-header">
                 <div class="step-num" id="sn-4">4</div>
                 <span class="step-icon">🤖</span>
-                <span class="step-name">Salesforce BLIP VLM</span>
+                <span class="step-name">Microsoft Florence-2 VLM</span>
                 <div class="spinner"></div>
                 <span class="step-status-badge" id="ss-4">Idle</span>
               </div>
               <div class="step-progress-bar"><div class="step-progress-inner"></div></div>
-              <div class="step-detail">Visual diagnostic description & severity assessment via vision-language transformer.</div>
+              <div class="step-detail">Visual diagnostic description & severity assessment via vision-language foundation transformer.</div>
             </div>
             <div class="step-connector"><div class="step-connector-line" id="conn-4"></div></div>
 
@@ -936,13 +936,13 @@
         <div class="placeholder" id="placeholder">
           <div class="placeholder-icon">🎥</div>
           <h2>Upload an Image or Video to Begin</h2>
-          <p>The automated inspection pipeline executes 2D FFT spectral analysis, YOLOv8 localization, BLIP visual description, and uncertainty calibration.</p>
+          <p>The automated inspection pipeline executes 2D FFT spectral analysis, YOLOv8 localization, Florence-2 visual description, and uncertainty calibration.</p>
         </div>
 
         <div class="loading-overlay" id="loading-overlay">
           <div class="loading-spinner-big"></div>
           <div class="loading-text" id="loading-text">Running Inspection Pipeline...</div>
-          <div class="loading-sub">Executing 2D FFT, YOLOv8 localization & BLIP uncertainty quantification...</div>
+          <div class="loading-sub">Executing 2D FFT, YOLOv8 localization & Florence-2 VLM analysis...</div>
         </div>
 
         <div class="results-wrapper hidden" id="results-wrapper">
@@ -1082,7 +1082,7 @@
             <span class="badge badge-cyan">Benchmark Data</span>
           </div>
           <p style="font-size:0.78rem; color:var(--text2); margin-bottom:12px;">
-            Evaluates trade-offs between detector backbone capacity (YOLOv8n vs YOLOv8s) and BLIP VLM across MVTec datasets.
+            Evaluates trade-offs between detector backbone capacity (YOLOv8n vs YOLOv8s) and Florence-2 VLM across MVTec datasets.
           </p>
           <div id="ablation-table-container">
             <table class="styled-table">
@@ -1351,7 +1351,7 @@
         
         pipelineTimer = setTimeout(() => {
           setStepState(3, 'done', '✓ Detected');
-          setStepState(4, 'active', 'BLIP VLM...');
+          setStepState(4, 'active', 'Florence-2 VLM...');
           
           pipelineTimer = setTimeout(() => {
             setStepState(4, 'done', '✓ Captioned');
