@@ -607,9 +607,9 @@
       overflow: hidden;
       border-radius: var(--radius-sm);
       border: 1px solid var(--border);
-      background: #000;
+      background: #020617;
       user-select: none;
-      touch-action: none;
+      touch-action: pan-y;
     }
     .slider-img {
       position: absolute;
@@ -623,56 +623,79 @@
       top: 0; left: 0;
       width: 100%; height: 100%;
       overflow: hidden;
-      clip-path: polygon(0 0, 50% 0, 50% 100%, 0 100%);
+      clip-path: inset(0 0 0 50%);
+      pointer-events: none;
+      transition: clip-path 0.04s ease-out;
     }
     .slider-divider {
       position: absolute;
       top: 0; bottom: 0;
       left: 50%;
-      width: 3px;
+      width: 4px;
+      transform: translateX(-50%);
       background: var(--cyan);
-      box-shadow: 0 0 12px var(--cyan);
+      box-shadow: 0 0 16px var(--cyan);
       cursor: ew-resize;
       z-index: 20;
+      pointer-events: none;
+      transition: left 0.04s ease-out;
+    }
+    .slider-divider::before {
+      content: '';
+      position: absolute;
+      top: 0; bottom: 0;
+      left: -20px; right: -20px;
     }
     .slider-handle {
       position: absolute;
       top: 50%; left: 50%;
       transform: translate(-50%, -50%);
-      width: 40px; height: 40px;
+      width: 44px; height: 44px;
       border-radius: 50%;
-      background: rgba(4,9,15,0.92);
+      background: rgba(4,9,15,0.95);
       border: 2px solid var(--cyan);
-      box-shadow: 0 0 16px rgba(0,212,255,0.6);
+      box-shadow: 0 0 20px rgba(0,212,255,0.7);
       display: flex; align-items: center; justify-content: center;
       color: var(--cyan);
-      font-size: 0.95rem;
+      font-size: 1.1rem;
       cursor: ew-resize;
       z-index: 21;
+    }
+    .slider-range-overlay {
+      position: absolute;
+      top: 0; left: 0;
+      width: 100%; height: 100%;
+      opacity: 0;
+      margin: 0; padding: 0;
+      cursor: ew-resize;
+      z-index: 25;
+      -webkit-appearance: none;
+      appearance: none;
     }
     .slider-badge-left, .slider-badge-right {
       position: absolute;
       bottom: 14px;
-      padding: 5px 12px;
+      padding: 6px 14px;
       border-radius: 6px;
-      font-size: 0.72rem;
+      font-size: 0.75rem;
       font-weight: 700;
       font-family: 'JetBrains Mono', monospace;
       z-index: 15;
-      backdrop-filter: blur(8px);
+      backdrop-filter: blur(10px);
       text-transform: uppercase;
+      pointer-events: none;
     }
     .slider-badge-left {
       left: 14px;
-      background: rgba(0,0,0,0.7);
+      background: rgba(0,0,0,0.8);
       color: #fff;
-      border: 1px solid rgba(255,255,255,0.2);
+      border: 1px solid rgba(255,255,255,0.25);
     }
     .slider-badge-right {
       right: 14px;
       background: var(--cyan-dim);
       color: var(--cyan);
-      border: 1px solid rgba(0,212,255,0.4);
+      border: 1px solid rgba(0,212,255,0.5);
     }
 
     .slider-controls-bar {
@@ -974,6 +997,7 @@
                 <div class="slider-divider" id="slider-divider">
                   <div class="slider-handle">↔</div>
                 </div>
+                <input type="range" id="slider-range-ctrl" min="0" max="100" value="50" class="slider-range-overlay" oninput="onSliderRangeInput(this.value)">
                 <span class="slider-badge-left" id="badge-left-lbl">Raw Input</span>
                 <span class="slider-badge-right" id="badge-right-lbl">Thermal Anomaly</span>
               </div>
@@ -982,13 +1006,13 @@
                 <div class="control-group">
                   <span>Layer Mode:</span>
                   <div class="layer-selector">
-                    <button class="layer-btn active" onclick="setSliderMode('thermal', this)">🔥 Thermal Anomaly</button>
-                    <button class="layer-btn" onclick="setSliderMode('annotated', this)">🎯 YOLO Boxes</button>
-                    <button class="layer-btn" onclick="setSliderMode('blended', this)">🌈 Alpha Blended</button>
+                    <button class="layer-btn active" id="btn-mode-thermal" onclick="setSliderMode('thermal', this)">🔥 Thermal Anomaly</button>
+                    <button class="layer-btn" id="btn-mode-annotated" onclick="setSliderMode('annotated', this)">🎯 YOLO Boxes</button>
+                    <button class="layer-btn" id="btn-mode-blended" onclick="setSliderMode('blended', this)">🌈 Alpha Blended</button>
                   </div>
                 </div>
                 <div style="font-size:0.75rem; color:var(--text3);">
-                  💡 <em>Drag the cyan divider horizontally to wipe across layers.</em>
+                  💡 <em>Drag anywhere on the image or use the cyan handle to wipe across layers.</em>
                 </div>
               </div>
             </div>
@@ -1439,55 +1463,77 @@
   let currentThreeTheme = 'cyan';
   let heightmapGridCache = null;
 
-  function initSplitSlider() {
-    const container = document.getElementById('diff-slider-container');
+  function updateSliderPosition(pct) {
+    pct = Math.max(0, Math.min(100, pct));
     const divider   = document.getElementById('slider-divider');
     const overlay   = document.getElementById('slider-overlay');
-    if (!container || !divider || !overlay) return;
+    const rangeCtrl = document.getElementById('slider-range-ctrl');
+    if (divider) divider.style.left = pct + '%';
+    if (overlay) overlay.style.clipPath = `inset(0 0 0 ${pct}%)`;
+    if (rangeCtrl && Math.abs(parseFloat(rangeCtrl.value) - pct) > 0.5) {
+      rangeCtrl.value = pct;
+    }
+  }
 
-    let isDragging = false;
+  function onSliderRangeInput(val) {
+    updateSliderPosition(parseFloat(val));
+  }
 
-    function moveSlider(clientX) {
+  function initSplitSlider() {
+    const container = document.getElementById('diff-slider-container');
+    if (!container) return;
+
+    let isPointerDown = false;
+
+    function handleMove(e) {
+      const clientX = e.clientX !== undefined ? e.clientX : (e.touches && e.touches[0] ? e.touches[0].clientX : null);
+      if (clientX === null) return;
       const rect = container.getBoundingClientRect();
-      let x = clientX - rect.left;
-      x = Math.max(0, Math.min(x, rect.width));
+      if (rect.width <= 0) return;
+      const x = clientX - rect.left;
       const pct = (x / rect.width) * 100;
-
-      divider.style.left = pct + '%';
-      // Left side shows base (Raw Image), Right side shows overlay (Anomaly / YOLO layer)
-      overlay.style.clipPath = `polygon(${pct}% 0, 100% 0, 100% 100%, ${pct}% 100%)`;
+      updateSliderPosition(pct);
     }
 
-    const startDrag = e => {
-      isDragging = true;
-      moveSlider(e.clientX || (e.touches && e.touches[0].clientX));
-    };
-    const stopDrag = () => { isDragging = false; };
-    const doDrag = e => {
-      if (!isDragging) return;
-      moveSlider(e.clientX || (e.touches && e.touches[0].clientX));
+    container.addEventListener('pointerdown', (e) => {
+      isPointerDown = true;
+      try { container.setPointerCapture(e.pointerId); } catch (_) {}
+      handleMove(e);
+    });
+
+    container.addEventListener('pointermove', (e) => {
+      if (!isPointerDown) return;
+      handleMove(e);
+    });
+
+    const endPointer = (e) => {
+      if (isPointerDown) {
+        isPointerDown = false;
+        try { container.releasePointerCapture(e.pointerId); } catch (_) {}
+      }
     };
 
-    divider.addEventListener('mousedown', startDrag);
-    container.addEventListener('mousedown', startDrag);
-    window.addEventListener('mouseup', stopDrag);
-    window.addEventListener('mousemove', doDrag);
+    container.addEventListener('pointerup', endPointer);
+    container.addEventListener('pointercancel', endPointer);
 
-    divider.addEventListener('touchstart', startDrag, { passive: true });
-    container.addEventListener('touchstart', startDrag, { passive: true });
-    window.addEventListener('touchend', stopDrag);
-    window.addEventListener('touchmove', doDrag, { passive: true });
+    // Initial 50% split position
+    updateSliderPosition(50);
   }
 
   function setSliderMode(mode, btn) {
     currentSliderMode = mode;
-    if (btn) {
-      btn.parentElement.querySelectorAll('.layer-btn').forEach(b => b.classList.remove('active'));
-      btn.classList.add('active');
-    }
+    document.querySelectorAll('.slider-controls-bar .layer-btn').forEach(b => b.classList.remove('active'));
+    const activeBtn = btn || document.getElementById(`btn-mode-${mode}`);
+    if (activeBtn) activeBtn.classList.add('active');
+
     const afterImg = document.getElementById('slider-after-img');
     const rightLbl = document.getElementById('badge-right-lbl');
-    if (!currentInspectionData || !afterImg) return;
+    if (!afterImg) return;
+
+    if (!currentInspectionData) {
+      if (rightLbl) rightLbl.textContent = mode === 'thermal' ? 'Thermal Anomaly' : (mode === 'annotated' ? 'YOLO Boxes' : 'Alpha Blended');
+      return;
+    }
 
     if (mode === 'thermal') {
       afterImg.src = currentInspectionData.anomaly_heatmap || currentInspectionData.annotated_image;
@@ -1675,7 +1721,11 @@
       if (panel) panel.classList.toggle('active', t === name);
     });
 
-    if (name === 'three3d') {
+    if (name === 'slider') {
+      setTimeout(() => {
+        updateSliderPosition(50);
+      }, 50);
+    } else if (name === 'three3d') {
       setTimeout(() => {
         if (!threeScene) initThreeScene();
         onWindowResizeThree();
@@ -1736,7 +1786,8 @@
       if (beforeImg && afterImg) {
         beforeImg.src = data.raw_image || data.annotated_image;
         afterImg.src  = data.anomaly_heatmap || data.annotated_image;
-        setSliderMode('thermal', document.getElementById('btn-mode-thermal'));
+        setSliderMode(currentSliderMode || 'thermal');
+        updateSliderPosition(50);
       }
 
       // Three.js 3D Topography Mesh Setup
