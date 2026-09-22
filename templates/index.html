@@ -1526,12 +1526,17 @@
     const activeBtn = btn || document.getElementById(`btn-mode-${mode}`);
     if (activeBtn) activeBtn.classList.add('active');
 
-    const afterImg = document.getElementById('slider-after-img');
-    const rightLbl = document.getElementById('badge-right-lbl');
+    const beforeImg = document.getElementById('slider-before-img');
+    const afterImg  = document.getElementById('slider-after-img');
+    const rightLbl  = document.getElementById('badge-right-lbl');
     if (!afterImg) return;
 
+    if (beforeImg && currentInspectionData) {
+      beforeImg.src = currentInspectionData.raw_image || (currentInspectionData.preprocessing && currentInspectionData.preprocessing.original) || currentInspectionData.annotated_image;
+    }
+
     if (!currentInspectionData) {
-      if (rightLbl) rightLbl.textContent = mode === 'thermal' ? 'Thermal Anomaly' : (mode === 'annotated' ? 'YOLO Boxes' : 'Alpha Blended');
+      if (rightLbl) rightLbl.textContent = mode === 'thermal' ? 'Thermal Anomaly' : (mode === 'annotated' ? 'YOLO Annotations' : 'Alpha Blended');
       return;
     }
 
@@ -1540,7 +1545,7 @@
       if (rightLbl) rightLbl.textContent = 'Thermal Anomaly';
     } else if (mode === 'annotated') {
       afterImg.src = currentInspectionData.annotated_image;
-      if (rightLbl) rightLbl.textContent = 'YOLO Boxes';
+      if (rightLbl) rightLbl.textContent = 'YOLO Annotations';
     } else if (mode === 'blended') {
       afterImg.src = currentInspectionData.blended_heatmap || currentInspectionData.anomaly_heatmap || currentInspectionData.annotated_image;
       if (rightLbl) rightLbl.textContent = 'Alpha Blended';
@@ -1784,7 +1789,7 @@
       const beforeImg = document.getElementById('slider-before-img');
       const afterImg  = document.getElementById('slider-after-img');
       if (beforeImg && afterImg) {
-        beforeImg.src = data.raw_image || data.annotated_image;
+        beforeImg.src = data.raw_image || (data.preprocessing && data.preprocessing.original) || data.annotated_image;
         afterImg.src  = data.anomaly_heatmap || data.annotated_image;
         setSliderMode(currentSliderMode || 'thermal');
         updateSliderPosition(50);
