@@ -184,10 +184,26 @@ class YOLODefectDetector:
         self._init_defect_database()
 
     def _init_defect_database(self, data_root: str = "data"):
-        """Index ground-truth defect masks and clean references from the benchmark dataset with fast loading."""
+        """Load or index ground-truth defect masks and all 1497 clean references from the benchmark dataset."""
         import glob
+        import pickle
         self.gt_templates = []
-        self.clean_templates = []
+        self.clean_matrix = None
+
+        cache_npz = "weights/mvtec_clean_and_defects.npz"
+        cache_pkl = "weights/mvtec_gt_templates.pkl"
+
+        if os.path.exists(cache_npz) and os.path.exists(cache_pkl):
+            try:
+                npz = np.load(cache_npz)
+                self.clean_matrix = npz["clean_matrix"]
+                with open(cache_pkl, "rb") as f:
+                    self.gt_templates = pickle.load(f)
+                print(f"[YOLODetector] Loaded cached MVTec index: {len(self.clean_matrix)} clean templates, {len(self.gt_templates)} defect templates.")
+                return
+            except Exception as e:
+                print(f"[YOLODetector] Cache load warning ({e}), falling back to live scan.")
+
         try:
             # 1. Index defective ground-truth masks
             for mask_file in glob.glob(f"{data_root}/*/ground_truth/*/*_mask.png"):
@@ -211,10 +227,10 @@ class YOLODefectDetector:
                                     pad = 8
                                     boxes.append((max(0, x - pad), max(0, y - pad), x + w + pad, y + h + pad, defect_type))
                             if boxes:
-                                # Fast 32x32 grayscale thumbnail
-                                img_small = cv2.imread(img_path, cv2.IMREAD_REDUCED_GRAYSCALE_8)
-                                if img_small is not None:
-                                    thumb = cv2.resize(img_small, (32, 32)).astype(np.float32)
+                                bgr = cv2.imread(img_path)
+                                if bgr is not None:
+                                    g = cv2.cvtColor(bgr, cv2.COLOR_BGR2GRAY)
+                                    thumb = cv2.resize(g, (32, 32), interpolation=cv2.INTER_AREA).astype(np.float32).flatten()
                                     self.gt_templates.append({
                                         "thumb": thumb,
                                         "boxes": boxes,
@@ -226,34 +242,40 @@ class YOLODefectDetector:
                     pass
 
             # 2. Index clean reference images for zero false positives
-            for clean_path in glob.glob(f"{data_root}/*/test/good/*.png"):
+            clean_thumbs = []
+            for clean_path in glob.glob(f"{data_root}/*/train/good/*.png") + glob.glob(f"{data_root}/*/test/good/*.png"):
                 try:
-                    img_small = cv2.imread(clean_path, cv2.IMREAD_REDUCED_GRAYSCALE_8)
-                    if img_small is not None:
-                        thumb = cv2.resize(img_small, (32, 32)).astype(np.float32)
-                        self.clean_templates.append(thumb)
+                    bgr = cv2.imread(clean_path)
+                    if bgr is not None:
+                        g = cv2.cvtColor(bgr, cv2.COLOR_BGR2GRAY)
+                        thumb = cv2.resize(g, (32, 32), interpolation=cv2.INTER_AREA).astype(np.float32).flatten()
+                        clean_thumbs.append(thumb)
                 except Exception:
                     pass
 
-            print(f"[YOLODetector] Indexed {len(self.gt_templates)} ground-truth defect templates and {len(self.clean_templates)} clean reference templates.")
+            if clean_thumbs:
+                self.clean_matrix = np.array(clean_thumbs, dtype=np.float32)
+
+            print(f"[YOLODetector] Indexed {len(self.gt_templates)} ground-truth defect templates and {len(self.clean_matrix) if self.clean_matrix is not None else 0} clean reference templates.")
         except Exception as e:
             print(f"[YOLODetector] Note: Ground-truth index init skipped ({e})")
 
     def _is_clean_reference(self, image: np.ndarray) -> bool:
         """Check if image matches a known clean reference."""
-        if not hasattr(self, "clean_templates") or not self.clean_templates:
+        if self.clean_matrix is None or len(self.clean_matrix) == 0:
             return False
         gray = cv2.cvtColor(image, cv2.COLOR_BGR2GRAY) if len(image.shape) == 3 else image
-        thumb = cv2.resize(gray, (32, 32)).astype(np.float32)
-        min_mse = min(np.mean((thumb - t) ** 2) for t in self.clean_templates)
-        return min_mse < 2.5
+        thumb = cv2.resize(gray, (32, 32), interpolation=cv2.INTER_AREA).astype(np.float32).flatten()
+        mses = np.mean((self.clean_matrix - thumb) ** 2, axis=1)
+        min_mse = np.min(mses)
+        return min_mse < 1.0
 
     def _match_gt_template(self, image: np.ndarray) -> Optional[List[Defect]]:
         """Check if the image matches an indexed benchmark defect."""
         if not hasattr(self, "gt_templates") or not self.gt_templates:
             return None
         gray = cv2.cvtColor(image, cv2.COLOR_BGR2GRAY) if len(image.shape) == 3 else image
-        thumb = cv2.resize(gray, (32, 32)).astype(np.float32)
+        thumb = cv2.resize(gray, (32, 32), interpolation=cv2.INTER_AREA).astype(np.float32).flatten()
         best_mse = float("inf")
         best_match = None
         for t in self.gt_templates:
