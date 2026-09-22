@@ -68,7 +68,7 @@
                   ▼
 ┌────────────────────────────────────────────────────────────────────────┐
 │             STEP 4: VLM NATURAL LANGUAGE GENERATION                    │
-│   • Salesforce BLIP Generative Image Captioning on cropped ROI         │
+│   • Microsoft Florence-2 Generative Visual Captioning on cropped ROI   │
 │   • Structured parsing: Severity ("low/med/high/critical") + Action    │
 └───────────────────────────────────┬────────────────────────────────────┘
                                     │

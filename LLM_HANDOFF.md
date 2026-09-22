@@ -14,7 +14,7 @@ A **5th-semester Image Processing & Analysis (IPA) Tier 1 Research Project** tha
 |---|---|---|
 | Image Preprocessing | OpenCV (Grayscale, Blur, Hist Eq, Canny Edges, 2D FFT) | Classical IPA feature extraction & noise reduction |
 | Defect Detection | **YOLOv8n** (Ultralytics) + IPA Anomaly Engine | Real-time bounding box detection & glowing defect circle overlays |
-| Defect Description | **Salesforce BLIP VLM** (`blip-image-captioning-base`) | Real local natural language defect descriptions & severity rating |
+| Defect Description | **Microsoft Florence-2 VLM** (`microsoft/Florence-2-base`) | Real fine-grained natural language defect descriptions & severity rating |
 | Uncertainty Calibration | Monte Carlo VLM Sampling & Token Entropy | Confidence scoring & human review flagging |
 | Web Application | **Flask** + Vanilla Glassmorphic HTML5/JS | Real AI web UI (Image & Video upload, Port 8080) |
 | Industrial Benchmarks | **5 MVTec AD Datasets** (427 test images) | `bottle`, `grid`, `leather`, `toothbrush`, `transistor` |
@@ -28,15 +28,15 @@ A **5th-semester Image Processing & Analysis (IPA) Tier 1 Research Project** tha
 | conda env `ipa` | ✅ Ready | `conda activate ipa` |
 | PyTorch with MPS hardware acceleration | ✅ Active | Device set to `mps` (Apple M4 GPU) |
 | `yolov8n.pt` & `yolov8s.pt` weights | ✅ Cached | YOLOv8n (6.5MB) + YOLOv8s (22.5MB) |
-| Salesforce BLIP VLM model | ✅ Cached | Cached at `~/.cache/huggingface/hub/` (~900MB) |
+| Microsoft Florence-2 / BLIP VLM model | ✅ Ready | Integrated with automatic local fallback |
 | 5 MVTec Industrial Datasets | ✅ Present | 427 test images under `data/` |
-| Video Pipeline with FFT & Uncertainty | ✅ Tested | `python main.py --video data/test_video.mp4 --device mps --vlm-backend blip` |
+| Video Pipeline with FFT & Uncertainty | ✅ Tested | `python main.py --video data/test_video.mp4 --device mps --vlm-backend florence2` |
 | Flask Web Server | ✅ Running | `http://localhost:8080` (Supports Image & Video Upload + Uncertainty Badges) |
 | 2D FFT & LBP Frequency Analysis | ✅ Integrated | `src/utils/frequency_analysis.py` → `outputs/visualizations/freq_vis_*.png` |
 | Monte Carlo Uncertainty Quantification | ✅ Integrated | `src/utils/uncertainty.py` (Confidence calibration & human review flags) |
 | 2x2 Empirical Ablation Study | ✅ Verified | `python scripts/ablation_study.py` → `outputs/ablation_results.csv` |
 | Report Charts & Analytics | ✅ Generated | `python scripts/analyze_log.py` → `outputs/visualizations/` |
-| Multi-Dataset Evaluation | ✅ Verified | `python scripts/evaluate.py --backend blip --device mps` |
+| Multi-Dataset Evaluation | ✅ Verified | `python scripts/evaluate.py --backend florence2 --device mps` |
 | Pre-Demo System Diagnostic | ✅ 13/13 PASS | `python scripts/final_check.py` |
 
 ---
