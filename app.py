@@ -93,8 +93,8 @@ def get_detector() -> YOLODefectDetector:
 def get_vlm_analyzer() -> VLMAnalyzer:
     global _vlm_analyzer
     if _vlm_analyzer is None:
-        print("[app] Initializing Real BLIP VLM Analyzer...")
-        _vlm_analyzer = VLMAnalyzer(backend="blip", model_id="Salesforce/blip-image-captioning-base")
+        print("[app] Initializing Microsoft Florence-2 Foundation VLM Analyzer...")
+        _vlm_analyzer = VLMAnalyzer(backend="florence2", model_id="microsoft/Florence-2-base")
     return _vlm_analyzer
 
 # ── Helpers ────────────────────────────────────────────────────
@@ -128,7 +128,7 @@ def status():
         "yolo_loaded": _detector is not None,
         "yolo_model": "kirkdokizelli/steel-defect-yolov8 (NEU-DET Surface Defects)",
         "vlm_loaded": _vlm_analyzer is not None,
-        "backend": "blip (Salesforce/blip-image-captioning-base)"
+        "backend": "florence2 (microsoft/Florence-2-base)"
     })
 
 @app.route("/video/<filename>")

@@ -1,10 +1,10 @@
 # 🏭 Automated Visual Quality Inspection System (Tier 1 Research Upgrade)
-### Hybrid YOLOv8 + Salesforce BLIP AI + 2D FFT Frequency Analysis + Uncertainty Quantification
+### Hybrid YOLOv8 + Microsoft Florence-2 / BLIP VLM + 2D FFT Frequency Analysis + Uncertainty Quantification
 
 An industrial-grade, research-level **Image Processing & Analysis (IPA)** visual inspection pipeline combining:
 1. **Classical Image Processing (IPA)**: Grayscale, Gaussian Blur, Histogram Equalization, Canny Edge Detection & 2D FFT Frequency Spectrum Analysis.
-2. **YOLOv8 Real-Time Object Detection**: Hardware-accelerated bounding box detection and glowing red defect circle overlays.
-3. **Salesforce BLIP Vision-Language Model**: Real local natural language defect descriptions, severity classification (`low`, `medium`, `high`), and recommended actions.
+2. **YOLOv8 Real-Time Object Detection**: Hardware-accelerated bounding box detection and glowing defect circle overlays.
+3. **Microsoft Florence-2 Vision-Language Model**: Fine-grained local natural language defect descriptions, severity classification (`low`, `medium`, `high`, `critical`), and recommended actions without web hallucinations.
 4. **Uncertainty Quantification**: Monte Carlo VLM sampling for confidence calibration and human-in-the-loop review.
 5. **Multi-Dataset Benchmarking**: Evaluated across 5 MVTec AD industrial datasets (**427 test images** across `bottle`, `grid`, `leather`, `toothbrush`, `transistor`).
 
@@ -16,7 +16,7 @@ An industrial-grade, research-level **Image Processing & Analysis (IPA)** visual
 ┌──────────────────────────────────────────────────────────────────┐
 │                   INDUSTRIAL INPUT LAYER                         │
 │         Single Image (.png/.jpg)  OR  Conveyor Belt Video (.mp4) │
-└─────────────────────────────────┬────────────────────────────────┘
+│└─────────────────────────────────┬────────────────────────────────┘
                                   │
                                   ▼
 ┌──────────────────────────────────────────────────────────────────┐
@@ -39,10 +39,10 @@ An industrial-grade, research-level **Image Processing & Analysis (IPA)** visual
                                   │
                                   ▼
 ┌──────────────────────────────────────────────────────────────────┐
-│             TIER 3: SALESFORCE BLIP VLM (REAL AI)                │
-│   • Local Vision-Language Model (`blip-image-captioning-base`)   │
-│   • Defect Crop + Prompt → Natural Language Description          │
-│   • Keyword Severity Classification: LOW / MEDIUM / HIGH         │
+│             TIER 3: MICROSOFT FLORENCE-2 VLM (REAL AI)           │
+│   • Local Vision Foundation Model (`microsoft/Florence-2-base`)  │
+│   • Defect Crop + Task Prompt → Fine-grained Description         │
+│   • Severity Classification: LOW / MEDIUM / HIGH / CRITICAL      │
 │   ★ Monte Carlo Uncertainty Sampling → Confidence Calibration    │
 └─────────────────────────────────┬────────────────────────────────┘
                                   │

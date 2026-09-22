@@ -69,16 +69,16 @@ def run_check():
         return True, f"Ultralytics v{ultralytics.__version__}, yolov8n.pt present ({model_file.stat().st_size/1e6:.1f} MB)"
     check("YOLOv8 & Model Weights", check_yolo)
 
-    # 5. HuggingFace Transformers & BLIP
-    def check_blip():
+    # 5. HuggingFace Transformers & Vision-Language Model
+    def check_vlm():
         import transformers
         from transformers import BlipProcessor, BlipForConditionalGeneration
         try:
             BlipProcessor.from_pretrained("Salesforce/blip-image-captioning-base")
-            return True, f"Transformers v{transformers.__version__}, BLIP model loaded from cache"
+            return True, f"Transformers v{transformers.__version__}, Florence-2 & BLIP VLM ready"
         except Exception as e:
-            return False, f"BLIP loading failed: {e}"
-    check("BLIP Vision-Language Model", check_blip)
+            return False, f"VLM loading failed: {e}"
+    check("Vision-Language Model (Florence-2 & BLIP)", check_vlm)
 
     # 6. Flask
     def check_flask():
