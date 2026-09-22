@@ -166,9 +166,9 @@ def get_research_data():
         try:
             df_eval = pd.read_csv(eval_csv)
             summary = df_eval.groupby("dataset").agg(
-                total_images=("image", "count"),
-                defects_found=("defects_found", "sum"),
-                avg_confidence=("avg_confidence", "mean")
+                total_images=("filename", "count"),
+                defects_found=("defect_count", "sum"),
+                accuracy=("correct", "mean")
             ).reset_index()
             eval_data = summary.to_dict(orient="records")
         except Exception as e:
