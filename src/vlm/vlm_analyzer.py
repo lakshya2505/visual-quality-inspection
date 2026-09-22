@@ -442,13 +442,12 @@ class BLIPBackend(VLMBackend):
         "contamination": "Surface residue and foreign particle contamination."
     }
 
-    def _format_industrial_description(self, raw_desc: str, defect_class: str) -> str:
+    def _format_industrial_description(self, raw_desc: str, defect_class: str, crop: Optional[np.ndarray] = None) -> str:
         """
-        Sanitize VLM caption to remove web-captioning hallucinations (e.g. flowers, blood, skin)
-        and format as a rigorous industrial engineering diagnostic statement.
+        Sanitize VLM caption and enrich with real-time photometric and spatial measurements
+        from the defect crop.
         """
         import re
-        # Remove prompt echoes
         cleaned = re.sub(
             r"^(a quality inspection|macro industrial|close up|inspection photo|photo of|an industrial|industrial defect)[^:]*:\s*",
             "",
@@ -465,17 +464,61 @@ class BLIPBackend(VLMBackend):
 
         words = set(re.findall(r"\b\w+\b", cleaned.lower()))
         has_hallucination = bool(words & self.OUT_OF_DOMAIN_WORDS)
-
         clean_cls = defect_class.replace("_", " ").lower()
 
-        if has_hallucination or len(cleaned) < 5 or cleaned.lower() == clean_cls:
-            return self.DOMAIN_DESCRIPTIONS.get(
-                clean_cls,
-                f"Localized {clean_cls} defect with anomalous surface texture deviation."
-            )
+        # Compute crop morphology metrics if available
+        crop_info = ""
+        if crop is not None and crop.size > 0:
+            ch, cw = crop.shape[:2]
+            aspect = max(cw, ch) / max(1, min(cw, ch))
+            mean_intensity = float(np.mean(crop))
+            std_intensity = float(np.std(crop))
+            
+            if aspect > 2.2:
+                shape_str = f"linear elongation (aspect {aspect:.1f}:1)"
+            elif aspect < 1.3:
+                shape_str = "localized radial footprint"
+            else:
+                shape_str = f"directional spread ({cw}×{ch}px)"
 
-        # Capitalize first letter cleanly
-        return cleaned[0].upper() + cleaned[1:]
+            if mean_intensity < 60:
+                photo_str = "dark absorption contrast"
+            elif mean_intensity > 190:
+                photo_str = "specular reflection contrast"
+            elif std_intensity > 45:
+                photo_str = "high-variance structural irregularity"
+            else:
+                photo_str = "surface texture gradient deviation"
+
+            crop_info = f" Measuring {cw}×{ch}px with {shape_str} and {photo_str}."
+
+        if not has_hallucination and len(cleaned) >= 8 and cleaned.lower() != clean_cls:
+            base_sentence = cleaned[0].upper() + cleaned[1:]
+            if not base_sentence.endswith('.'):
+                base_sentence += '.'
+            return f"{base_sentence}{crop_info}"
+
+        # Dynamic fallback based on real crop geometry and class
+        descriptors = {
+            "crazing": f"Micro-crazing stress fracture network on substrate.{crop_info}",
+            "patches": f"Localized surface patch irregularity and coating discontinuity.{crop_info}",
+            "scratches": f"Linear surface abrasion and score marking with directional edge gradient.{crop_info}",
+            "scratch": f"Linear surface abrasion and score marking with directional edge gradient.{crop_info}",
+            "inclusion": f"Foreign particulate inclusion embedded in material matrix.{crop_info}",
+            "pitted_surface": f"Localized surface cavitation pitting and porosity flaw.{crop_info}",
+            "pitted surface": f"Localized surface cavitation pitting and porosity flaw.{crop_info}",
+            "rolled-in_scale": f"Rolled-in scale defect and mill oxidation compression layer.{crop_info}",
+            "rolled-in scale": f"Rolled-in scale defect and mill oxidation compression layer.{crop_info}",
+            "structural anomaly": f"Structural edge anomaly with localized high-frequency texture disruption.{crop_info}",
+            "crack": f"Structural crack propagation with material separation hazard.{crop_info}",
+            "dent": f"Localized surface indentation and mechanical impact deformation.{crop_info}",
+            "corrosion": f"Surface oxidation and localized chemical degradation.{crop_info}",
+            "contamination": f"Surface residue and foreign particle contamination.{crop_info}",
+        }
+        return descriptors.get(
+            clean_cls,
+            f"Localized {clean_cls} anomaly with anomalous surface texture deviation.{crop_info}"
+        )
 
     def analyze_image(
         self, image: np.ndarray, defect_class: str, context: Optional[str] = None
@@ -498,9 +541,9 @@ class BLIPBackend(VLMBackend):
             output_ids = self._model.generate(**inputs, max_new_tokens=40, repetition_penalty=1.2)
 
         raw_desc = self._processor.decode(output_ids[0], skip_special_tokens=True).strip()
-        description = self._format_industrial_description(raw_desc, defect_class)
+        description = self._format_industrial_description(raw_desc, defect_class, crop=image)
 
-        severity = self._infer_severity(description, defect_class)
+        severity = self._infer_severity(description, defect_class, crop=image)
         action   = {
             "critical": "scrap",
             "high":     "rework",
@@ -538,9 +581,9 @@ class BLIPBackend(VLMBackend):
             device=self.device
         )
         raw_desc = unc_res["description"]
-        description = self._format_industrial_description(raw_desc, defect_class)
+        description = self._format_industrial_description(raw_desc, defect_class, crop=image)
 
-        severity = self._infer_severity(description, defect_class)
+        severity = self._infer_severity(description, defect_class, crop=image)
         action   = {
             "critical": "scrap",
             "high":     "rework",
@@ -560,14 +603,30 @@ class BLIPBackend(VLMBackend):
             flag_human_review=unc_res["flag_human_review"],
         )
 
-    def _infer_severity(self, description: str, defect_class: str) -> str:
-        """Map BLIP caption words → severity level via keyword heuristics."""
+    def _infer_severity(self, description: str, defect_class: str, crop: Optional[np.ndarray] = None) -> str:
+        """Dynamically determine severity based on crop size, texture variance, and defect type."""
+        clean_cls = defect_class.replace("_", " ").lower()
+        base_sev = self.CLASS_SEVERITY.get(clean_cls, "medium")
+        
+        if crop is not None and crop.size > 0:
+            ch, cw = crop.shape[:2]
+            area = ch * cw
+            std_val = float(np.std(crop))
+            
+            # Area & variance weighted severity calibration
+            if area > 18000 or std_val > 55:
+                return "critical" if base_sev in ["high", "critical"] else "high"
+            elif area > 6000 or std_val > 38:
+                return "high" if base_sev in ["high", "critical"] else "medium"
+            elif area < 1500 and std_val < 25:
+                return "low"
+
         words = set(description.lower().split())
         if words & self.HIGH_WORDS:
             return "high"
         if words & self.LOW_WORDS:
             return "low"
-        return self.CLASS_SEVERITY.get(defect_class.lower(), "medium")
+        return base_sev
 
 
 # ─────────────────────────────────────────────

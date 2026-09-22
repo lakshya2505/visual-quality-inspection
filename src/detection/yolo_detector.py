@@ -251,7 +251,7 @@ class YOLODefectDetector:
         """
         Classical Image Processing & Analysis (IPA) defect detector.
         Uses Gaussian Blur, Histogram Equalization, Canny Edge Detection, and Contour Analysis
-        to locate localized structural anomalies (cracks, cuts, stains, broken parts).
+        to locate and classify localized structural anomalies (cracks, cuts, stains, broken parts).
         """
         h, w = image.shape[:2]
         gray = cv2.cvtColor(image, cv2.COLOR_BGR2GRAY)
@@ -271,6 +271,7 @@ class YOLODefectDetector:
 
         # Exclude border regions (e.g. image edges)
         margin = 10
+        global_mean = np.mean(gray)
 
         for cnt in contours:
             area = cv2.contourArea(cnt)
@@ -278,25 +279,50 @@ class YOLODefectDetector:
                 x, y, cw, ch = cv2.boundingRect(cnt)
                 # Ensure box is not right on the image boundary
                 if x > margin and y > margin and (x + cw) < (w - margin) and (y + ch) < (h - margin):
-                    # Calculate local contrast / edge density anomaly score
-                    roi = edges[y:y+ch, x:x+cw]
-                    edge_density = np.sum(roi > 0) / (cw * ch)
+                    roi_edges = edges[y:y+ch, x:x+cw]
+                    roi_gray = gray[y:y+ch, x:x+cw]
+                    edge_density = np.sum(roi_edges > 0) / (cw * ch)
                     
-                    if edge_density > 0.08:  # Significant edge anomaly density
-                        # Calibrate confidence: base 0.72 + scaled contrast density (capped at 0.95)
-                        conf = min(0.95, 0.72 + (edge_density * 1.2))
+                    if edge_density > 0.07:  # Significant edge anomaly density
+                        aspect = max(cw, ch) / max(1, min(cw, ch))
+                        solidity = area / max(1, (cw * ch))
+                        roi_mean = np.mean(roi_gray)
+                        contrast_delta = abs(roi_mean - global_mean)
+
+                        # Dynamic classification based on morphological shape and photometry
+                        if aspect >= 2.4:
+                            cls_name = "scratches"
+                            cls_id = 5
+                        elif contrast_delta > 35 and roi_mean < global_mean:
+                            cls_name = "inclusion"
+                            cls_id = 1
+                        elif solidity > 0.55 and aspect < 1.6 and edge_density < 0.18:
+                            cls_name = "pitted_surface"
+                            cls_id = 3
+                        elif edge_density > 0.22 or solidity < 0.40:
+                            cls_name = "crazing"
+                            cls_id = 0
+                        elif area > (h * w) * 0.015:
+                            cls_name = "patches"
+                            cls_id = 2
+                        else:
+                            cls_name = "structural anomaly"
+                            cls_id = 6
+
+                        # Calibrate confidence dynamically: 0.78 - 0.96
+                        conf = min(0.96, 0.76 + (edge_density * 0.8) + min(0.12, contrast_delta / 250.0))
                         defects.append(
                             Defect(
-                                class_id=0,
-                                class_name="structural anomaly",
+                                class_id=cls_id,
+                                class_name=cls_name,
                                 confidence=conf,
                                 bbox=BoundingBox(float(x), float(y), float(x + cw), float(y + ch)),
                             )
                         )
 
-        # Keep top 3 largest anomaly defects
+        # Keep top 4 largest anomaly defects
         defects.sort(key=lambda d: d.bbox.area, reverse=True)
-        return defects[:3]
+        return defects[:4]
 
     def detect_from_path(self, image_path: str) -> DetectionResult:
         """Convenience wrapper — loads image then calls detect()."""
